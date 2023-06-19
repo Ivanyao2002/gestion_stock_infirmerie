@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %} <title>Medicaments</title> {% endblock %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- CDN Utilities -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.0/css/bootstrap.min.css" integrity="sha384-pzjBvEQFjHAvrHf/QyflENZ6wP3+XG1qOpQ/6vRLFO8eCp7byuNjzunUWtWl4M1/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    <!-- JS Files -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" defer></script>
+    <script src="{% static 'js/dashboard.js' %}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.all.min.js"></script>
+
+    {% block style %} {% endblock %}
+  </head>
+
+  <body>
+    <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow" style="background-color: #2C4178;"> 
+      <a class="navbar-brand col-md-4 col-lg-2 col-xl-2 px-2 fs-6" href="{% url 'stocks:list_medocs' %}">
+        <img src="{% static 'img/carena_logo.jpg' %}" alt="image" class="img-fluid rounded float-start me-1" style="width: 90px; height: 40px;">
+        <h5 class="m-2 pe-2">Infirmerie</h5>
+      </a>
+      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      {% if user.is_authenticated %}
+      <span class="text-light text-start"> {{user.username|upper}}</span>
+      <div class="navbar-nav d-flex flex-row">
+        <div class="nav-item ">
+          <a class="nav-link px-3" href="{% url 'users:compte' user.id %}"><i class="bi bi-person-circle m-3"> </i>Mon Compte</a>
+        </div>
+          
+        <div class="nav-item ">
+          <a class="nav-link px-3" href="{% url 'deconnexion' %}">Déconnexion</a>
+        </div>
+      </div>
+      {% endif %}
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+          <nav id="sidebarMenu" class="col-lg-2 col-md-4 col-sm-12 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-5 sidebar-sticky mt-5">
+              <ul class="nav flex-column">
+                <li class="nav-item ms-3 mb-4">
+                  <div class="btn-group col-lg-10">
+                    <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" id="transactionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="align-text-bottom bi bi-capsule-pill"></span>
+                        <span class="text-dark">Gérer les Médicaments</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+                      <li><a class="dropdown-item" href="{% url 'stocks:list_medocs' %}">Liste des Médicaments</a></li>
+                      <li><a class="dropdown-item" href="{% url 'stocks:create_medocs' %}">Enregistrer un Médicament</a></li>
+                    </ul>
+                  </div>                
+                </li>
+                
+                <li class="nav-item ms-3">
+                  <div class="btn-group col-lg-10">
+                    <a class="btn btn-outline-info btn-sm" href="{% url 'stocks:list_transaction' %}">
+                      <span class="align-text-bottom bi bi-clock-history"></span>
+                      <span class="text-dark">Voir les transactions</span>
+                    </a>
+                  </div>
+                </li>
+
+                <li class="nav-item ms-3">
+
+                  <div class="btn-group col-lg-10">
+                    <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="transactionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="align-text-bottom bi bi-arrow-left-right"></span>
+                        <span class="text-dark">Faire une transaction</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+                      <li><a class="dropdown-item" href="{% url 'stocks:create_transaction' %}">Ajouter au Stock</a></li>
+                      <li><a class="dropdown-item" href="{% url 'stocks:retrait_transaction' %}">Retirer du Stock</a></li>
+                    </ul>
+                  </div>
+                </li>
+
+                <li class="nav-item ms-3 mt-4">
+
+                  <div class="btn-group col-lg-10">
+                    <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="transactionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="align-text-bottom bi bi-people-fill"></span>
+                        <span class="text-dark">Gérer les Fournisseurs</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+                      <li><a class="dropdown-item" href="{% url 'stocks:list_fournisseur' %}">Liste des Fournisseurs</a></li>
+                      <li><a class="dropdown-item" href="{% url 'stocks:create_fournisseur' %}">Enregistrer un Fournisseur</a></li>
+                    </ul>
+                  </div>
+                </li>
+
+                <li class="nav-item ms-3 mt-4">
+
+                  <div class="btn-group col-lg-10">
+                    <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="transactionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="align-text-bottom bi bi-people-fill"></span>
+                        <span class="text-dark">Gérer les Travailleurs</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+                      <li><a class="dropdown-item" href="{% url 'stocks:list_worker' %}">Liste des Travailleurs</a></li>
+                      <li><a class="dropdown-item" href="{% url 'stocks:create_worker' %}">Enregistrer un Travailleur</a></li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </nav>
+  
+          {% block body %}
+          {% endblock %}
+        </div>
+    </div>
+
+    <footer class="mt-5 py-1" style="background-color: #2C4178;">
+      <div class="container">
+        <p class="text-center text-info m-3">Copyright Holder © 2023 - Tous Droits Réservés - CARENA-Infirmerie </p>
+      </div>
+    </footer>
+  </body>
+</html>  

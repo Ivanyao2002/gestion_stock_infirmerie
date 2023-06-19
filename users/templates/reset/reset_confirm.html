@@ -1,0 +1,8 @@
+<h2>Réinitialisation du mot de passe</h2>
+<p>Veuillez saisir votre nouveau mot de passe.</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.new_password1|as_bootstrap }}
+  {{ form.new_password2|as_bootstrap }}
+  <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+</form>

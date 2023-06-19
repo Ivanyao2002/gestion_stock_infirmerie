@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}<title> Transactions</title>{% endblock %}
+
+{% block body %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Ajout sur le stock de {{ medicament.nom_medoc }}</h1>
+    </div>
+    <br>
+    
+    <br><br>
+    <div class="container">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-8">
+              <form method="POST" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="quantite" class="form-label text-primary">Quantité boite : </label>
+                  <input type="number" class="form-control" id="quantite" name="quantite" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="quantite_plaq" class="form-label text-primary">Quantité plaquette : </label>
+                  <input type="number" class="form-control" id="quantite_plaq" name="quantite_plaq" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="fournisseur" class="form-label text-primary">Fournisseur : </label>
+                  <select class="form-select" id="fournisseur" name="fournisseur" required>
+                    <option value="">Sélectionner un fournisseur</option>
+                    {% for fournisseur in fournisseurs %}
+                    <option value="{{ fournisseur.id }}">{{ fournisseur.nom }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                
+                <div class="container">
+                  <div class="row text-center">
+                    <div class="col-12 col-md-4 col-lg-4">
+                      <a href="{% url 'stocks:create_transaction' %}" class="btn btn-outline-danger">Retour</a>
+                    </div>
+                    <div class="col-12 col-md-8 col-lg-8">
+                      <button type="submit" class="btn btn-outline-primary">Ajouter au stock</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer"></div>
+      </div>
+    </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+  // Initialiser Select2 sur le menu déroulant
+  $(document).ready(function() {
+    $('#fournisseur').select2();
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Supprimer ce médicament</h1>
+    </div>
+    <br><br>
+
+    <div class="container">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <p class="text-center lead">Voulez-vous supprimer cet élément ? ({{medoc}}) </p>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <a href="{% url 'stocks:list_medocs' %}" class="w-100 btn btn-lg btn-outline-primary">Annuler</a>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <button class="w-100 btn btn-lg btn-outline-danger" type="submit">Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+  {% endblock %}

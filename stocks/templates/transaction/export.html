@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>Exporter</title>{% endblock %}
+
+{% block body %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Exporter vers un fichier excel</h1>
+    </div>
+    <br>
+    
+    <div class="container mb-5 mt-5 ms-5">
+      <div class="row">
+        <div class="col-12 col-md-8 col-lg-10">
+          <div class="card">
+            <div class="card-header text-center">
+              SELECTIONNER
+            </div>
+            <div class="card-body">
+              <form method="GET" action="{% url 'stocks:exporter_etat' %}" class="row g-4 align-items-center">
+                
+                <div class="col-auto">
+                    <input type="text" id="medicamen" name="medicamen" class="form-control" placeholder="Nom du médicament">
+                </div>
+                
+                <div class="col-auto">
+                    <label for="date1" class="col-form-label">De :</label>
+                </div>
+                <div class="col-auto">
+                  <input type="date" id="date1" name="date1" class="form-control">
+                </div>
+
+                <div class="col-auto">
+                    <label for="date2" class="col-form-label">A :</label>
+                </div>
+                <div class="col-auto">
+                    <input type="date" id="date2" name="date2" class="form-control">
+                  </div>
+
+                <div class="col-auto">
+                    <select id="mois" name="mois" class="form-select">
+                        <option value="">Sélectionnez un mois</option>
+                        <option value="1">Janvier</option>
+                        <option value="2">Février</option>
+                        <option value="3">Mars</option>
+                        <option value="4">Avril</option>
+                        <option value="5">Mai</option>
+                        <option value="6">Juin</option>
+                        <option value="7">Juillet</option>
+                        <option value="8">Aout</option>
+                        <option value="9">Septembre</option>
+                        <option value="10">Octobre</option>
+                        <option value="11">Novembre</option>
+                        <option value="12">Décembre</option>
+                        
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <input type="text" id="annee" name="annee" class="form-control" placeholder="Année">
+                </div>
+
+                <div class="col-auto">
+                  <select id="categorie" name="categorie" class="form-select">
+                    <option value="">Toutes les catégories</option>
+                    <option value="entree">Entrée</option>
+                    <option value="sortie">Sortie</option>
+                  </select>
+                </div>
+
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Exporter</button>
+                </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+    <br><br>
+
+</main>
+
+{% endblock %}

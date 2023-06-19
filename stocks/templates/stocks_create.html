@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}<title> Médicaments</title>{% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block body %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Enregistrer un nouveau médicament</h1>
+    </div>
+    <br><br>
+
+    <div class="container">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-body">
+              <main class="form-signin">
+                <div class="row">
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2 text-info">
+                      {{ form.code_medoc}}
+                      <label for="code_medoc" class="text-primary">Code du Médicament</label>  
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2 text-info">
+                      {{ form.nom_medoc}}
+                      <label for="code_medoc" class="text-primary">Nom du Médicament</label>  
+                    </div>
+                  </div>
+                </div>
+                  
+                <div class="row">
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2">
+                      {{ form.unité}}
+                      <label for="unité" class="text-primary">Unité</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2">
+                      {{ form.quantité_stock}}
+                      <label for="quantité_stock" class="text-primary">Quantité Boite</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2">
+                      {{ form.nom_commercial}}
+                      <label for="nom_commercial" class="text-primary">Nom commercial</label>  
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2">
+                      {{ form.fournisseur}}
+                      <label for="nom_commercial" class="text-primary">Fournisseur</label>  
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6">
+                      <div class="form-floating mt-2">
+                        {{ form.quantité_detail}}
+                        <label for="nom_commercial" class="text-primary">Quantité Plaquettes</label>  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </main>
+            </div>
+            <div class="card-footer">
+              <div class="row">
+                  <div class="col-12 col-md-6">
+                      <a href="{% url 'stocks:list_medocs' %}" class="w-100 btn btn-lg btn-outline-danger">Annuler</a>
+                  </div>
+                  <div class="col-12 col-md-6">
+                      <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Ajouter</button>
+                  </div>
+              </div>
+            </div>
+            
+        </div>
+      </form>
+    </div>
+
+</main>
+
+{% endblock %}
