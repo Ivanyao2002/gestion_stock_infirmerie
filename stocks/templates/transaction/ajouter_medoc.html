@@ -16,7 +16,7 @@
         <div class="card-body">
           <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-8">
-              <form method="POST" action="">
+              <form method="POST" id="ajouter-form">
                 {% csrf_token %}
                 <div class="mb-3">
                   <label for="quantite" class="form-label text-primary">Quantité boite : </label>
@@ -55,12 +55,58 @@
         <div class="card-footer"></div>
       </div>
     </div>
+
+            <!-- Ajoutez une div pour la pop-up -->
+            <div id="success-popup" style="display: none; text-align: center;">
+              <p>Le medicament a été ajouté avec succès.</p>
+              <p>Cliquez sur "OK" pour revenir à la liste des transactions.</p>
+              <button id="ok-button" class="btn btn-primary btn-md">OK</button>  <!-- Ajoutez un bouton "OK" -->
+            </div>
+
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
   // Initialiser Select2 sur le menu déroulant
   $(document).ready(function() {
     $('#fournisseur').select2();
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+      $('#ajouter-form').on('submit', function(e) {
+          // Empêcher la soumission normale du formulaire
+          e.preventDefault();
+
+          // Effectuer une requête AJAX pour envoyer le formulaire
+          $.ajax({
+              type: 'POST',
+              url: $(this).attr('action'),
+              data: $(this).serialize(),
+              success: function(response) {
+                  // Afficher la pop-up de succès
+                  $('#success-popup').dialog({
+                      modal: true,
+                      autoOpen: true,
+                      title: 'Médicament ajouté',
+                      width: 400,
+                      height: 'auto'
+                  });
+              // Appliquer la couleur personnalisée au titre de la pop-up
+              $('.ui-dialog-title').css({'color':'#2C4178','text-align': 'center',});
+
+              // Gérer le clic sur le bouton "OK"
+              $('#ok-button').on('click', function() {
+                    window.location.href = "{% url 'stocks:list_transaction' %}";  // Rediriger vers la liste des travailleurs
+                });
+             
+              },
+              error: function(error) {
+                  // Gérer les erreurs de requête
+                  alert('Une erreur s\'est produite lors de l\'ajout du medicament.')
+              }
+          });
+      });
   });
 </script>
 

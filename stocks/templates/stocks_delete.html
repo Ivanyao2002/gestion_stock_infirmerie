@@ -9,7 +9,7 @@
     <br><br>
 
     <div class="container">
-        <form action="" method="POST">
+        <form method="POST" id="suppression-form">
             {% csrf_token %}
             <div class="card">
                 <div class="card-body">
@@ -28,6 +28,51 @@
             </div>
         </form>
     </div>
+
+      <!-- Ajoutez une div pour la pop-up -->
+      <div id="success-popup" style="display: none; text-align: center;">
+        <p>Le médicament a été supprimé avec succès.</p>
+        <p>Cliquez sur "OK" pour revenir à la liste des médicaments.</p>
+        <button id="ok-button" class="btn btn-primary btn-md">OK</button>  <!-- Ajoutez un bouton "OK" -->
+      </div>
 </main>
+
+<script>
+    $(document).ready(function() {
+        $('#suppression-form').on('submit', function(e) {
+            // Empêcher la soumission normale du formulaire
+            e.preventDefault();
+  
+            // Effectuer une requête AJAX pour envoyer le formulaire
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    // Afficher la pop-up de succès
+                    $('#success-popup').dialog({
+                        modal: true,
+                        autoOpen: true,
+                        title: 'Médicament supprimé',
+                        width: 400,
+                        height: 'auto'
+                    });
+                // Appliquer la couleur personnalisée au titre de la pop-up
+                $('.ui-dialog-title').css({'color':'#2C4178','text-align': 'center',});
+  
+                // Gérer le clic sur le bouton "OK"
+                $('#ok-button').on('click', function() {
+                      window.location.href = "{% url 'stocks:list_medocs' %}";  // Rediriger vers la liste des médicaments
+                  });
+               
+                },
+                error: function(error) {
+                    // Gérer les erreurs de requête
+                    alert('Une erreur s\'est produite lors de la suppression du medicament.')
+                }
+            });
+        });
+    });
+  </script>
 
   {% endblock %}

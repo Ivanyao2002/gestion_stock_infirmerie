@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomeMedocView,CreateMedocView, UpdateMedocView, DeleteMedocView,TransactionView, HomeTransactionView, achat, vente,RechercheView, exporter_liste_medicaments, HomeFournView, HomeWorkView, CreateWorkerView, CreateFournView, export_transactions, expoter, export_etat
+from .views import HomeMedocView,CreateMedocView, UpdateMedocView, DeleteMedocView,TransactionView, HomeTransactionView, achat, vente,RechercheView, exporter_liste_medicaments, HomeFournView, HomeWorkView, CreateWorkerView, CreateFournView, export_transactions, expoter, export_etat, notifications_popup
 
 
 app_name = 'stocks'
@@ -22,5 +22,7 @@ urlpatterns = [
     path('transactions/exporter/', export_transactions, name='export_transactions'), 
     path('transactions/exporter-vers/', expoter, name='exporter'), 
     path('transactions/exporter-etat/', export_etat, name='exporter_etat'), 
+    path('notifications/', notifications_popup, name='notifications_popup'),
+
 
 ]

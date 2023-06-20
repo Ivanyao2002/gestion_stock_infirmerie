@@ -11,7 +11,7 @@
     <br><br>
 
     <div class="container">
-      <form method="POST">
+      <form method="POST" id="worker-form">
         {% csrf_token %}
         <div class="card mb-5">
             <div class="card-body">
@@ -32,31 +32,41 @@
                 </div>
                   
                 <div class="row">
-                  <div class="col-12 col-md-4">
+                  <div class="col-12 col-md-6">
                     <div class="form-floating mt-2">
                       {{ form.prenoms}}
                       <label for="prenoms" class="text-primary">Prénoms</label>
                     </div>
                   </div>
-                  <div class="col-12 col-md-3">
+                  <div class="col-12 col-md-6">
                     <div class="form-floating mt-2">
                       {{ form.email}}
                       <label for="email" class="text-primary">Email</label>
                     </div>
                   </div>
-                  <div class="col-12 col-md-4">
+                </div>
+
+                <div class="row">
+                  <div class="col-12 col-md-6">
                     <div class="form-floating mt-2">
                       {{ form.atelier}}
                       <label for="atelier" class="text-primary">Atelier</label>  
                     </div>
                   </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-floating mt-2">
+                      {{ form.societe}}
+                      <label for="societe" class="text-primary">Société</label>
+                    </div>
+                  </div>
                 </div>
+              
               </main>
             </div>
             <div class="card-footer">
               <div class="row">
                   <div class="col-12 col-md-6">
-                      <a href="{% url 'stocks:list_medocs' %}" class="w-100 btn btn-lg btn-outline-danger">Annuler</a>
+                      <a href="{% url 'stocks:list_worker' %}" class="w-100 btn btn-lg btn-outline-danger">Annuler</a>
                   </div>
                   <div class="col-12 col-md-6">
                       <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Ajouter</button>
@@ -68,6 +78,51 @@
       </form>
     </div>
 
+        <!-- Ajoutez une div pour la pop-up -->
+        <div id="success-popup" style="display: none; text-align: center;">
+          <p>Le travailleur a été enregistré avec succès.</p>
+          <p>Cliquez sur "OK" pour revenir à la liste des travailleurs.</p>
+          <button id="ok-button" class="btn btn-primary btn-md">OK</button>  <!-- Ajoutez un bouton "OK" -->
+        </div>
+
 </main>
+
+<script>
+  $(document).ready(function() {
+      $('#worker-form').on('submit', function(e) {
+          // Empêcher la soumission normale du formulaire
+          e.preventDefault();
+
+          // Effectuer une requête AJAX pour envoyer le formulaire
+          $.ajax({
+              type: 'POST',
+              url: $(this).attr('action'),
+              data: $(this).serialize(),
+              success: function(response) {
+                  // Afficher la pop-up de succès
+                  $('#success-popup').dialog({
+                      modal: true,
+                      autoOpen: true,
+                      title: 'Travailleur enrégistré',
+                      width: 400,
+                      height: 'auto'
+                  });
+              // Appliquer la couleur personnalisée au titre de la pop-up
+              $('.ui-dialog-title').css({'color':'#2C4178','text-align': 'center',});
+
+              // Gérer le clic sur le bouton "OK"
+              $('#ok-button').on('click', function() {
+                    window.location.href = "{% url 'stocks:list_worker' %}";  // Rediriger vers la liste des travailleurs
+                });
+             
+              },
+              error: function(error) {
+                  // Gérer les erreurs de requête
+                  alert('Une erreur s\'est produite lors de l\'enregistrement du travailleur.')
+              }
+          });
+      });
+  });
+</script>
 
 {% endblock %}

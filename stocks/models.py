@@ -1,16 +1,25 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 # from datetime import datetime
+from django.utils import timezone
+from django.dispatch import receiver
+from django.db.models.signals import post_save #Signal django qui permet de declencher une action lorsquu'une modification est faite ou un enregistrement
 
 from users.models import User
 
 # Create your models here.
 class Travailleurs(models.Model):
+    choix = (
+        ('CARENA','CARENA'),
+        ('REGIS','REGIS'),
+    )
+
     nom = models.CharField(max_length=30,blank=False)
     prenoms = models.CharField(max_length=100,blank=False)
     email = models.EmailField(max_length=200)
     atelier = models.CharField(max_length=100,blank=False)
     matricule = models.CharField(unique=True, max_length=100,blank=False)
+    societe = models.CharField(max_length=20, choices=choix)
 
     class Meta:
         ordering = ["nom"]
@@ -42,6 +51,7 @@ class Medicaments(models.Model):
     code_medoc = models.CharField(max_length=50)
     date_creation = models.DateTimeField(auto_now_add=True)
     fournisseur = models.ForeignKey(Fournisseurs,on_delete= models.SET_NULL, null=True)
+    seuil_alerte = models.PositiveIntegerField(default=10, blank=True)
 
 
     slug = models.SlugField(blank=True)
@@ -122,3 +132,16 @@ class Transactions(models.Model):
         request = kwargs.pop('request', None)  # Récupère l'objet request s'il existe
         self.user = request.user if request else None  # Assigne l'utilisateur connecté ou None
         super().save(*args, **kwargs)
+
+
+class Notification(models.Model):
+    # content = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+@receiver(post_save, sender=Medicaments)
+def check_stock_alerts(sender, instance, **kwargs):
+    if instance.quantité_stock < instance.seuil_alerte:
+        message = f"Le stock de {instance.nom_medoc} est faible. Veuillez commander davantage."
+        notification = Notification(message=message, created_at=timezone.now())
+        notification.save()

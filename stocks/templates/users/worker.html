@@ -81,6 +81,7 @@
             <th scope="col">Prénoms</th>
             <th scope="col">Email</th>
             <th scope="col">Atelier</th>
+            <th scope="col">Société</th>
             <!-- <th scope="col">Actions</th> -->
           </tr>
         </thead>
@@ -93,11 +94,12 @@
             <td>{{ work.prenoms }}</td>
             <td>{{ work.email }}</td>              
             <td>{{ work.atelier }}</td>
+            <td>{{ work.societe }}</td>
           </tr>
 
           {% empty %}
           <tr>
-              <td colspan="6">Aucun médicament trouvé.</td>
+              <td colspan="6">Aucun travailleur trouvé.</td>
           </tr>
           {% endfor %}
         </tbody>

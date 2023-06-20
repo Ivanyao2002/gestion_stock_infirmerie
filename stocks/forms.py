@@ -197,6 +197,14 @@ class TravailleursForm(forms.ModelForm):
             'placeholder':"Paracétamol",
         })
 
+        self.fields['societe'].widget.attrs.update({
+            'type':"text",
+            'class':"form-select ",
+            'style':"color: #DC143C;",
+            'id':"floatingInput",
+            'placeholder':"",
+        })        
+
     class Meta:
         model = Travailleurs
         exclude = ("slug",)

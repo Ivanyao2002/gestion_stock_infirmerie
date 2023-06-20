@@ -12,7 +12,7 @@ from datetime import datetime
 from openpyxl.utils import get_column_letter
 from django.db.models import Sum
 
-from .models import Medicaments, Transactions, Travailleurs, Fournisseurs
+from .models import Medicaments, Transactions, Travailleurs, Fournisseurs, Notification
 from .forms import MedicamentsForm, TravailleursForm, FournisseursForm
 
 # Create your views here.
@@ -406,7 +406,6 @@ class CreateFournView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('stocks:list_fournisseur')
 
 
-
 def export_transactions(request):
     transactions = Transactions.objects.all()  # Récupérez les transactions selon vos critères de filtrage
 
@@ -507,3 +506,17 @@ def export_etat(request):
     workbook.save(response)
 
     return response
+
+# Vérification régulière des stocks et génération des notifications
+def check_stock_alerts():
+    medicaments = Medicaments.objects.all()
+    # On parcours la liste si la qtite est iinferieur au stock, on enregistre une instance pour l'utilisateur concerné
+    for medicament in medicaments:
+        if medicament.quantité_stock < medicament.seuil_alerte:
+            message = f"Le stock de {medicament.nom_medoc} est faible. Veuillez commander davantage."
+            notification = Notification(message=message, created_at=timezone.now())
+            notification.save()
+
+def notifications_popup(request):
+    notifications = Notification.objects.all().order_by('-created_at')[:5]  # Récupérer les 5 dernières notifications
+    return render(request, 'notif_pop.html', {'notifications': notifications})
