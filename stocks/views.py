@@ -10,9 +10,10 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import datetime
 from openpyxl.utils import get_column_letter
-from django.db.models import Sum
+from django.db.models import Sum, F, Count
+from chartjs.views.lines import BaseLineChartView
 
-from .models import Medicaments, Transactions, Travailleurs, Fournisseurs, Notification
+from .models import Medicaments, Transactions, Travailleurs, Fournisseurs
 from .forms import MedicamentsForm, TravailleursForm, FournisseursForm
 
 # Create your views here.
@@ -238,7 +239,6 @@ class HomeTransactionView(LoginRequiredMixin, ListView):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
-
 @login_required
 def achat(request, slug):
     medicament = get_object_or_404(Medicaments, slug= slug)
@@ -299,26 +299,6 @@ def vente(request, slug):
         
     return render(request, 'transaction/retirer_medoc.html', {'medicament': medicament, 'travailleurs':travailleurs})
 
-# def recherche(request):
-#     if request.method == 'POST':
-#         date = request.POST.get('date')
-#         mois = request.POST.get('mois')
-#         annee = request.POST.get('annee')
-#         nom_medoc = request.POST.get('nom_medoc')
-
-#         medocs = Medicaments.objects.all()
-        
-#         if date:
-#             medocs = medocs.search_by_date(date)
-#         if mois:
-#             medocs = medocs.search_by_month(mois)
-#         if annee:
-#             medocs = medocs.search_by_year(annee)
-#         if nom_medoc:
-#             medocs = medocs.search_by_name(nom_medoc)
-
-#         return render(request, 'stocks_list.html', {'medocs': medocs})
-    
 @login_required
 def exporter_liste_medicaments(request):
     medocs = Medicaments.objects.all()
@@ -507,16 +487,75 @@ def export_etat(request):
 
     return response
 
-# Vérification régulière des stocks et génération des notifications
-def check_stock_alerts():
-    medicaments = Medicaments.objects.all()
-    # On parcours la liste si la qtite est iinferieur au stock, on enregistre une instance pour l'utilisateur concerné
-    for medicament in medicaments:
-        if medicament.quantité_stock < medicament.seuil_alerte:
-            message = f"Le stock de {medicament.nom_medoc} est faible. Veuillez commander davantage."
-            notification = Notification(message=message, created_at=timezone.now())
-            notification.save()
 
-def notifications_popup(request):
-    notifications = Notification.objects.all().order_by('-created_at')[:5]  # Récupérer les 5 dernières notifications
-    return render(request, 'notif_pop.html', {'notifications': notifications})
+class Statistiques(BaseLineChartView):
+    def get_labels(self):
+        labels = []
+        statistiques = Transactions.objects.filter(
+            type_transaction=Transactions.VENTE
+        ).values(
+            'medicaments__nom_medoc', 'travailleurs__societe'
+        ).annotate(
+            sorties_total=Sum('quantite')
+        ).order_by('-sorties_total')
+        for stat in statistiques:
+            labels.append(f"{stat['medicaments__nom_medoc']} ({stat['travailleurs__societe']})")
+        return labels
+
+    def get_providers(self):
+        return ['Sorties']
+
+    def get_data(self):
+        data = []
+        statistiques = Transactions.objects.filter(
+            type_transaction=Transactions.VENTE
+        ).values(
+            'medicaments__nom_medoc', 'travailleurs__societe'
+        ).annotate(
+            sorties_total=Sum('quantite')
+        ).order_by('-sorties_total')
+        for stat in statistiques:
+            data.append(stat['sorties_total'])
+        return [data]
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['labels'] = self.get_labels()
+        context['data'] = self.get_data()
+        return context
+
+def generate_years():
+    return range(2010, 2061)
+
+
+def statistiques(request):
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+
+    transactions = Transactions.objects.all()
+
+    if month:
+        transactions = transactions.filter(date_transaction__month=month)
+    if year:
+        transactions = transactions.filter(date_transaction__year=year)
+
+    total_sorties = transactions.filter(
+        type_transaction=Transactions.VENTE
+    ).aggregate(
+        total=Sum('quantite')
+    )['total']
+
+    statistiques = transactions.filter(
+        type_transaction=Transactions.VENTE
+    ).values(
+        'medicaments__nom_medoc', 'travailleurs__societe'
+    ).annotate(
+        sorties_total=Sum('quantite')
+    ).annotate(
+        pourcentage_sorties=(Sum('quantite') * 100.0) / total_sorties
+    ).order_by('-sorties_total')
+
+    return render(request, 'other/statistiques.html', {'statistiques': statistiques, 'total_sorties': total_sorties, 'years': generate_years()})
+
+
+   

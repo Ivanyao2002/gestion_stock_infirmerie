@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}<title> Statisques</title>{% endblock %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Statistiques par société de travailleurs</h1>
+    </div>
+
+  <form class="form-inline" method="GET" action="{% url 'stocks:statistiques' %}">
+    <div class="row">
+      <div class="col12 col-md-6 col-lg-6">
+        <div class="form-group">
+          <label for="month">Mois:</label>
+          <select class="form-select" name="month" id="month">
+              <option value="">Filtrer en fonction du mois</option>
+              <option value="1">Janvier</option>
+              <option value="2">Février</option>
+              <option value="3">Mars</option>
+              <option value="4">Avril</option>
+              <option value="5">Mai</option>
+              <option value="6">Juin</option>
+              <option value="7">Juillet</option>
+              <option value="8">Aout</option>
+              <option value="9">Septembre</option>
+              <option value="10">Octobre</option>
+              <option value="11">Novembre</option>
+              <option value="12">Decembre</option>
+          </select>
+      </div>
+      </div>
+      <div class="col12 col-md-6 col-lg-6">
+        <div class="form-group ml-2">
+          <label for="year">Année:</label>
+          <select class="form-select" name="year" id="year">
+              <option value="">Filtrer en fonction de l'année</option>
+              {% for year in years %}
+              <option value="{{ year }}">{{ year }}</option>
+              {% endfor %}
+          </select>
+      </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-outline-primary m-2">Filtrer</button>
+    </div>
+  </form>
+  
+  <div class="table-responsive">
+    <table class="table table-striped table-sm table-hover">
+      <thead>
+          <tr>
+              <th scope="col">Médicament</th>
+              <th scope="col">Société</th>
+              <th scope="col">Sorties total</th>
+              <th scope="col">Pourcentage sorties</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for stat in statistiques %}
+          <tr>
+              <td>{{ stat.medicaments__nom_medoc }}</td>
+              <td>{{ stat.travailleurs__societe }}</td>
+              <td>{{ stat.sorties_total }}</td>
+              <td>{{ stat.pourcentage_sorties|floatformat:2 }}%</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </div> 
+</main>
+{% endblock %}

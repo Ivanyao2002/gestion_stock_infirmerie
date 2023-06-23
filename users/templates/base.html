@@ -21,6 +21,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
     {% block style %} {% endblock %}
@@ -77,7 +78,6 @@
                 </li>
 
                 <li class="nav-item ms-3">
-
                   <div class="btn-group col-lg-10">
                     <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="transactionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="align-text-bottom bi bi-arrow-left-right"></span>
@@ -91,7 +91,6 @@
                 </li>
 
                 <li class="nav-item ms-3 mt-4">
-
                   <div class="btn-group col-lg-10">
                     <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="transactionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="align-text-bottom bi bi-people-fill"></span>
@@ -105,7 +104,6 @@
                 </li>
 
                 <li class="nav-item ms-3 mt-4">
-
                   <div class="btn-group col-lg-10">
                     <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="transactionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="align-text-bottom bi bi-people-fill"></span>
@@ -115,6 +113,15 @@
                       <li><a class="dropdown-item" href="{% url 'stocks:list_worker' %}">Liste des Travailleurs</a></li>
                       <li><a class="dropdown-item" href="{% url 'stocks:create_worker' %}">Enregistrer un Travailleur</a></li>
                     </ul>
+                  </div>
+                </li>
+
+                <li class="nav-item ms-3 mt-4">
+                  <div class="btn-group col-lg-10">
+                    <a class="btn btn-outline-info btn-sm" href="{% url 'stocks:statistiques' %}">
+                      <span class="align-text-bottom bi bi-bar-chart-fill"></span>
+                      <span class="text-dark">Voir les statistiques</span>
+                    </a>
                   </div>
                 </li>
               </ul>

@@ -1,9 +1,5 @@
 from django.db import models
 from django.template.defaultfilters import slugify
-# from datetime import datetime
-from django.utils import timezone
-from django.dispatch import receiver
-from django.db.models.signals import post_save #Signal django qui permet de declencher une action lorsquu'une modification est faite ou un enregistrement
 
 from users.models import User
 
@@ -122,26 +118,8 @@ class Transactions(models.Model):
     def search_by_year(cls, année):
         return cls.objects.filter(date_transaction__year=année)
 
-    # def save(self, *args, **kwargs):
-    #     self.user = kwargs.pop('request', None)  # Récupère l'objet request s'il existe
-    #     # Si la transaction n'a pas encore d'utilisateur, l'attribuer à l'utilisateur connecté
-    #     if not self.user:
-    #         self.user = self.request.user  # Assurez-vous que la requête contient l'utilisateur connecté
-    #     super().save(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         request = kwargs.pop('request', None)  # Récupère l'objet request s'il existe
         self.user = request.user if request else None  # Assigne l'utilisateur connecté ou None
         super().save(*args, **kwargs)
-
-
-class Notification(models.Model):
-    # content = models.CharField(max_length=200)
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-@receiver(post_save, sender=Medicaments)
-def check_stock_alerts(sender, instance, **kwargs):
-    if instance.quantité_stock < instance.seuil_alerte:
-        message = f"Le stock de {instance.nom_medoc} est faible. Veuillez commander davantage."
-        notification = Notification(message=message, created_at=timezone.now())
-        notification.save()
