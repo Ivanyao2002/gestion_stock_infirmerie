@@ -105,9 +105,9 @@
             <td>{{ transaction.quantite_plaq }}</td>
             <td>
               {% if  transaction.type_transaction ==  "Entrée" %}
-                  {{ transaction.fournisseur|upper }}
+                  {{ transaction.get_fournisseur|upper }}
               {% else %}
-                  {{ transaction.travailleurs|upper }}
+                  {{ transaction.get_travailleurs|upper }}
             {% endif %}
             </td>
             <td>{{ transaction.date_transaction }}</td>
@@ -144,14 +144,17 @@
             {% endif %}
                 
             {% for page_num in transactions.paginator.page_range %}
+            {% if page_num <= 11 %}
             <li class="page-item {% if page_num == transactions.number %}active{% endif %}">
               <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
             </li>
+            {% endif %}
             {% endfor %}
                 
             {% if transactions.has_next %}
             <li class="page-item">
                     <a class="page-link" href="?page={{ transactions.next_page_number }}" aria-label="Suivant">
+                      <span>...</span>
                         <span class="sr-only">Suivant</span>
                         <span aria-hidden="true">&raquo;</span>
                     </a>

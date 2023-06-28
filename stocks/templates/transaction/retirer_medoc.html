@@ -33,7 +33,7 @@
                   <select class="form-select" id="travailleur" name="travailleur" required>
                     <option value="">Sélectionner un travailleur</option>
                     {% for travailleur in travailleurs %}
-                    <option value="{{ travailleur.id }}">{{ travailleur.nom }}</option>
+                    <option value="{{ travailleur.id }}" data-matricule="{{ travailleur.matricule }}"><span><<</span>{{ travailleur.matricule }}<span>>></span> {{ travailleur.nom }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -69,25 +69,14 @@
   // Initialiser Select2 sur le menu déroulant
   $(document).ready(function() {
     $('#travailleur ').select2();
-  });
-</script>
-<!-- <script>
-  $(document).ready(function() {
-    // Initialiser Select2 sur le menu déroulant
-    $('#travailleur').select2();
 
     // Ajouter une fonction de recherche basée sur le matricule du travailleur
     $('#travailleur').on('select2:open', function() {
-      $('.select2-search__field').attr('placeholder', 'Rechercher par matricule');
+    $('.select2-search__field').attr('placeholder', 'Rechercher par nom ou matricule');
     });
 
-    $('#travailleur').on('select2:selecting', function(e) {
-      var selectedOption = $(e.params.args.data.element);
-      var matricule = selectedOption.data('matricule');
-      $('.select2-search__field').val(matricule);
-    });
   });
-</script> -->
+</script>
 
 <script>
   $(document).ready(function() {
@@ -126,7 +115,5 @@
       });
   });
 </script>
-
-
 
 {% endblock %}

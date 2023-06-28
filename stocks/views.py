@@ -3,7 +3,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from openpyxl import Workbook
 from django.utils import timezone, formats
 from django.contrib import messages
@@ -12,6 +12,7 @@ from datetime import datetime
 from openpyxl.utils import get_column_letter
 from django.db.models import Sum, F, Count
 from chartjs.views.lines import BaseLineChartView
+import json
 
 from .models import Medicaments, Transactions, Travailleurs, Fournisseurs
 from .forms import MedicamentsForm, TravailleursForm, FournisseursForm
@@ -528,9 +529,10 @@ def generate_years():
     return range(2010, 2061)
 
 
-def statistiques(request):
+def statistiques_details(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
+    societe = request.GET.get('societe')
 
     transactions = Transactions.objects.all()
 
@@ -538,12 +540,11 @@ def statistiques(request):
         transactions = transactions.filter(date_transaction__month=month)
     if year:
         transactions = transactions.filter(date_transaction__year=year)
+    if societe:
+        transactions = transactions.filter(travailleurs__societe=societe)
 
-    total_sorties = transactions.filter(
-        type_transaction=Transactions.VENTE
-    ).aggregate(
-        total=Sum('quantite')
-    )['total']
+    total_sorties_boite = transactions.filter(type_transaction=Transactions.VENTE).aggregate(total=Sum('quantite'))['total']
+    total_sorties_plaq = transactions.filter(type_transaction=Transactions.VENTE).aggregate(total=Sum('quantite_plaq'))['total']
 
     statistiques = transactions.filter(
         type_transaction=Transactions.VENTE
@@ -551,11 +552,41 @@ def statistiques(request):
         'medicaments__nom_medoc', 'travailleurs__societe'
     ).annotate(
         sorties_total=Sum('quantite')
+    ).annotate(pourcentage_sorties=(Sum('quantite') * 100.0) / total_sorties_boite
+    ).order_by('-sorties_total').annotate(
+        sorties_total_plaq=Sum('quantite_plaq')
+    ).annotate(pourcentage=(Sum('quantite_plaq') * 100.0) / total_sorties_plaq)
+
+    return render(request, 'other/statistiques.html', {'statistiques': statistiques, 'total_sorties_boite': total_sorties_boite, 'years': generate_years(), 'total_sorties_plaq': total_sorties_plaq})
+
+
+def statistiques_global(request):
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+    societe = request.GET.get('societe')
+
+    transactions = Transactions.objects.all()
+
+    if month:
+        transactions = transactions.filter(date_transaction__month=month)
+    if year:
+        transactions = transactions.filter(date_transaction__year=year)
+    if societe:
+        transactions = transactions.filter(travailleurs__societe=societe)
+
+    total_sorties_boite = transactions.filter(type_transaction=Transactions.VENTE).aggregate(total=Sum('quantite'))['total']
+
+    total_sorties_plaq = transactions.filter(type_transaction=Transactions.VENTE).aggregate(total=Sum('quantite_plaq'))['total']
+
+    statistiques = transactions.filter(
+        type_transaction=Transactions.VENTE
+    ).values(
+        'travailleurs__societe'
     ).annotate(
-        pourcentage_sorties=(Sum('quantite') * 100.0) / total_sorties
-    ).order_by('-sorties_total')
+        sorties_total=Sum('quantite')
+    ).annotate(pourcentage_sorties=(Sum('quantite') * 100.0) / total_sorties_boite
+    ).order_by('-sorties_total').annotate(
+        sorties_total_plaq=Sum('quantite_plaq')
+    ).annotate(pourcentage=(Sum('quantite_plaq') * 100.0) / total_sorties_plaq)
 
-    return render(request, 'other/statistiques.html', {'statistiques': statistiques, 'total_sorties': total_sorties, 'years': generate_years()})
-
-
-   
+    return render(request, 'other/stats_global.html', {'statistiques': statistiques, 'total_sorties_boite': total_sorties_boite, 'years': generate_years(), 'total_sorties_plaq': total_sorties_plaq})

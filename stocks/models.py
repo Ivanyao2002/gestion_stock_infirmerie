@@ -7,16 +7,28 @@ from users.models import User
 class Travailleurs(models.Model):
     choix = (
         ('CARENA','CARENA'),
-        ('REGIS','REGIS'),
+        ('REGIE','REGIE'),
     )
 
-    nom = models.CharField(max_length=30,blank=False)
-    prenoms = models.CharField(max_length=100,blank=False)
+    liste = (
+        ('RMO','RMO'),
+        ('SNS','SNS'),
+        ('TMS','TMS'),
+        ('MIRBAP','MIRBAP'),
+        ('CTMCI','CTMCI'),
+        ('EKAR','EKAR'),
+        ('ETS AF','ETS AF'),
+        ('E.A.C.I','E.A.C.I'),
+        ('WICS','WICS'),
+    )
+
+    nom = models.CharField(max_length=200,blank=False)#Contient le nom et les prénoms
     email = models.EmailField(max_length=200)
     atelier = models.CharField(max_length=100,blank=False)
-    matricule = models.CharField(unique=True, max_length=100,blank=False)
+    matricule = models.CharField(unique=True, max_length=50,blank=False)
     societe = models.CharField(max_length=20, choices=choix)
-
+    societe_regie = models.CharField(max_length=20, choices=liste, blank=True)
+    
     class Meta:
         ordering = ["nom"]
 
@@ -117,6 +129,18 @@ class Transactions(models.Model):
     @classmethod
     def search_by_year(cls, année):
         return cls.objects.filter(date_transaction__year=année)
+    
+    def get_travailleurs(self):
+        if self.travailleurs:
+            return self.travailleurs
+        else:
+            return "Aucun"
+
+    def get_fournisseur(self):
+        if self.fournisseur:
+            return self.fournisseur
+        else:
+            return "Aucun"
 
 
     def save(self, *args, **kwargs):

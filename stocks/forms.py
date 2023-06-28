@@ -165,12 +165,12 @@ class TravailleursForm(forms.ModelForm):
             'placeholder':"Paracétamol",
         })
 
-        self.fields['prenoms'].widget.attrs.update({
+        self.fields['societe_regie'].widget.attrs.update({
             'type':"text",
-            'class':"form-control ",
+            'class':"form-select ",
             'style':"color: #DC143C;",
             'id':"floatingInput",
-            'placeholder':"Paracétamol",
+            'placeholder':"",
         })
 
         self.fields['email'].widget.attrs.update({
