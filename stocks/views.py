@@ -12,7 +12,6 @@ from datetime import datetime
 from openpyxl.utils import get_column_letter
 from django.db.models import Sum, F, Count
 from chartjs.views.lines import BaseLineChartView
-import json
 
 from .models import Medicaments, Transactions, Travailleurs, Fournisseurs
 from .forms import MedicamentsForm, TravailleursForm, FournisseursForm
@@ -357,6 +356,35 @@ class HomeWorkView(LoginRequiredMixin, ListView):
         context['travailleur'] = page_obj
         return context
     
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            return self.post(request, *args, **kwargs)
+        else:
+            return self.get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Gérer la logique pour les requêtes POST ici
+        nom = request.POST.get('nom')
+        matricule = request.POST.get('matricule')
+
+        travailleur = Travailleurs.objects.all()
+    
+        if nom:
+            travailleur = Travailleurs.search_by_name(nom)
+        if matricule:
+            travailleur = Travailleurs.search_by_matricule(matricule)
+
+        context = {
+            'travailleur': travailleur
+        }
+
+        return render(request, 'users/worker.html', context)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
 
 class HomeFournView(LoginRequiredMixin, ListView):
     model = Fournisseurs
@@ -371,7 +399,36 @@ class HomeFournView(LoginRequiredMixin, ListView):
         page_obj = paginator.get_page(page_number)
         context['fournisseur'] = page_obj
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            return self.post(request, *args, **kwargs)
+        else:
+            return self.get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Gérer la logique pour les requêtes POST ici
+        nom = request.POST.get('nom')
+        matricule = request.POST.get('matricule')
+
+        fournisseur = Fournisseurs.objects.all()
     
+        if nom:
+            fournisseur = Fournisseurs.search_by_name(nom)
+        if matricule:
+            fournisseur = Travailleurs.search_by_matricule(matricule)
+
+        context = {
+            'fournisseur': fournisseur
+        }
+
+        return render(request, 'users/fournisseur.html', context)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
 
 class CreateWorkerView(LoginRequiredMixin, CreateView):
     model = Travailleurs
@@ -384,6 +441,20 @@ class CreateFournView(LoginRequiredMixin, CreateView):
     model = Fournisseurs
     template_name = "users/fournisseur_create.html"
     form_class = FournisseursForm
+    success_url = reverse_lazy('stocks:list_fournisseur')
+
+
+class DeleteWorker(LoginRequiredMixin, DeleteView):
+    model = Travailleurs
+    template_name = "users/worker_delete.html"
+    context_object_name = "travailleurs"
+    success_url = reverse_lazy('stocks:list_worker')
+
+
+class DeleteFournisseur(LoginRequiredMixin, DeleteView):
+    model = Fournisseurs
+    template_name = "users/fournisseur_delete.html"
+    context_object_name = "fournisseurs"
     success_url = reverse_lazy('stocks:list_fournisseur')
 
 
@@ -564,6 +635,7 @@ def statistiques_global(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
     societe = request.GET.get('societe')
+    societe_regie = request.GET.get('societe_regie')
 
     transactions = Transactions.objects.all()
 
@@ -573,20 +645,44 @@ def statistiques_global(request):
         transactions = transactions.filter(date_transaction__year=year)
     if societe:
         transactions = transactions.filter(travailleurs__societe=societe)
+    if societe_regie:
+        transactions = transactions.filter(travailleurs__societe_regie=societe_regie)
 
     total_sorties_boite = transactions.filter(type_transaction=Transactions.VENTE).aggregate(total=Sum('quantite'))['total']
-
     total_sorties_plaq = transactions.filter(type_transaction=Transactions.VENTE).aggregate(total=Sum('quantite_plaq'))['total']
 
-    statistiques = transactions.filter(
+    statistiques_societe = transactions.filter(
         type_transaction=Transactions.VENTE
     ).values(
         'travailleurs__societe'
     ).annotate(
         sorties_total=Sum('quantite')
-    ).annotate(pourcentage_sorties=(Sum('quantite') * 100.0) / total_sorties_boite
+    ).annotate(
+        pourcentage_sorties=(Sum('quantite') * 100.0) / total_sorties_boite
     ).order_by('-sorties_total').annotate(
         sorties_total_plaq=Sum('quantite_plaq')
-    ).annotate(pourcentage=(Sum('quantite_plaq') * 100.0) / total_sorties_plaq)
+    ).annotate(
+        pourcentage=(Sum('quantite_plaq') * 100.0) / total_sorties_plaq
+    )
 
-    return render(request, 'other/stats_global.html', {'statistiques': statistiques, 'total_sorties_boite': total_sorties_boite, 'years': generate_years(), 'total_sorties_plaq': total_sorties_plaq})
+    statistiques_societe_regie = transactions.filter(
+        type_transaction=Transactions.VENTE, travailleurs__societe_regie__isnull=False,travailleurs__societe__exact='REGIE', #On extraire les transactions vente ou la societe exacte est regie et ou les societe regie ne sont pas null
+    ).values(
+        'travailleurs__societe_regie'
+    ).annotate(
+        sorties_total=Sum('quantite')
+    ).annotate(
+        pourcentage_sorties=(Sum('quantite') * 100.0) / total_sorties_boite
+    ).order_by('-sorties_total').annotate(
+        sorties_total_plaq=Sum('quantite_plaq')
+    ).annotate(
+        pourcentage=(Sum('quantite_plaq') * 100.0) / total_sorties_plaq
+    )
+
+    return render(request, 'other/stats_global.html', {
+        'statistiques_societe': statistiques_societe,
+        'statistiques_societe_regie': statistiques_societe_regie,
+        'total_sorties_boite': total_sorties_boite,
+        'years': generate_years(),
+        'total_sorties_plaq': total_sorties_plaq
+    })

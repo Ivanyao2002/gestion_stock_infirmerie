@@ -32,6 +32,14 @@ class Travailleurs(models.Model):
     class Meta:
         ordering = ["nom"]
 
+    @classmethod
+    def search_by_name(cls, nom):
+        return cls.objects.filter(nom__icontains=nom) 
+
+    @classmethod
+    def search_by_matricule(cls, matricule):
+        return cls.objects.filter(matricule=matricule) 
+
     def __str__(self) :
         return self.nom
     
@@ -44,6 +52,15 @@ class Fournisseurs(models.Model):
 
     class Meta:
         ordering = ["nom"]
+
+    @classmethod
+    def search_by_name(cls, nom):
+        return cls.objects.filter(nom__icontains=nom) 
+
+    @classmethod
+    def search_by_matricule(cls, matricule):
+        return cls.objects.filter(matricule=matricule) 
+
 
     def __str__(self) :
         return self.societe

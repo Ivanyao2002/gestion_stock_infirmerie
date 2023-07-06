@@ -39,7 +39,7 @@
               <option value="{{ year }}">{{ year }}</option>
               {% endfor %}
           </select>
-      </div>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -51,11 +51,28 @@
               <option value="CARENA">CARENA</option>
               <option value="REGIE">REGIE</option>
           </select>
+        </div>
       </div>
+      <div class="col-12 col-md-6 col-lg-6 my-3">
+        <div class="form-group">
+          <!-- <label for="societe">Société:</label> -->
+          <select class="form-select" name="societe_regie" id="search_societe_regie">
+              <option value="">Filtrer en fonction de la société regie</option>
+              <option value="SNS">SNS</option>
+              <option value="RMO">RMO</option>
+              <option value="TMS">TMS</option>
+              <option value="MIRBAP">MIRBAP</option>
+              <option value="EKAR">EKAR</option>
+              <option value="CTMCI">CTMCI</option>
+              <option value="ETS AF">ETS AF</option>
+              <option value="E.A.C.I">E.A.C.I</option>
+              <option value="WICS">WICS</option>
+          </select>
+        </div>
       </div>
-      <div class="col-12 col-md-6 col-lg-6">
-        <div class="text-start">
-          <button type="submit" class="btn btn-outline-primary mb-5 mt-3">Filtrer</button>
+      <div class="col-12 col-md-12 col-lg-12">
+        <div class="text-center">
+          <button type="submit" class="btn btn-outline-primary mt-3">Filtrer</button>
         </div>
       </div>
     </div>
@@ -83,7 +100,7 @@
           </tr>
       </thead>
       <tbody>
-          {% for stat in statistiques %}
+          {% for stat in statistiques_societe %}
           <tr>
               <td>{{ stat.travailleurs__societe }}</td>
               <td>{{ stat.sorties_total }}</td>
@@ -99,4 +116,40 @@
       </tbody>
     </table>
   </div> 
+
+  <br><br>
+  <div class="row">
+    <p class="text-center h6 my-3 text-danger">STATISTIQUES PAR SOCIETE REGIE</p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-sm table-hover">
+      <thead>
+          <tr>
+              <th scope="col">Société Regie</th>
+              <th scope="col">Sorties total en boite</th>
+              <th scope="col">Pourcentage sorties</th>
+              <th scope="col">Sorties total en plaquette</th>
+              <th scope="col">Pourcentage</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for stats in statistiques_societe_regie %}
+          <tr>
+              <td>{{ stats.travailleurs__societe_regie }}</td>
+              <td>{{ stats.sorties_total }}</td>
+              <td>{{ stats.pourcentage_sorties|floatformat:2 }}%</td>
+              <td>{{ stats.sorties_total_plaq }}</td>
+              <td>{{ stats.pourcentage|floatformat:2 }}%</td>
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="8" class="text-center">Aucune statistique à afficher.</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </div> 
+
+</main>
 {% endblock %}

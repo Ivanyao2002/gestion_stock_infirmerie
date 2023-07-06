@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomeMedocView,CreateMedocView, UpdateMedocView, DeleteMedocView,TransactionView, HomeTransactionView, achat, vente,RechercheView, exporter_liste_medicaments, HomeFournView, HomeWorkView, CreateWorkerView, CreateFournView, export_transactions, expoter, export_etat, statistiques_details, statistiques_global
+from .views import HomeMedocView,CreateMedocView, UpdateMedocView, DeleteMedocView,TransactionView, HomeTransactionView, achat, vente,RechercheView, exporter_liste_medicaments, HomeFournView, HomeWorkView, CreateWorkerView, CreateFournView, export_transactions, expoter, export_etat, statistiques_details, statistiques_global, DeleteFournisseur, DeleteWorker
 
 
 app_name = 'stocks'
@@ -24,4 +24,6 @@ urlpatterns = [
     path('transactions/exporter-etat/', export_etat, name='exporter_etat'),
     path('statistiques/', statistiques_details, name='statistiques_detail' ),
     path('statistics/', statistiques_global, name='statistiques_global' ),
+    path('worker/supprimer-travailleur-<int:pk>/', DeleteWorker.as_view(), name='delete_worker'),
+    path('fournisseur/supprimer-fournisseur<int:pk>/', DeleteFournisseur.as_view(), name='delete_fournisseur'),
 ]
