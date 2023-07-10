@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'stocks',
-    'chartjs', 
+    'consultation', 
 ]
 
 MIDDLEWARE = [
