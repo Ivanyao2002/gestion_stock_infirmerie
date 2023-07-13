@@ -73,8 +73,8 @@
             <th scope="col">TYPE DE VISITE</th>
             <th scope="col">APTITUDE</th>
             <th scope="col">AFFECTION CONNUE</th>
-            <th scope="col">NOUVELLE AFFECTION</th>
-            <th scope="col">OBSERVATIONS</th>
+            <!-- <th scope="col">NOUVELLE AFFECTION</th> -->
+            <!-- <th scope="col">OBSERVATIONS</th> -->
             <!-- <th scope="col">Actions</th> -->
           </tr>
         </thead>
@@ -83,15 +83,45 @@
           <tr>
             <td>{{ day.id }}</td>
             <td>{{ day.date_consultation }}</td>
-            <td>{{ day.societe }}</td>
-            <td>{{ day.nom_prenoms|truncatewords:12 }}</td>
-            <td>{{ day.matricule }}</td>  
-            <td>{{ day.atelier }}</td>              
+            <td>
+              {% if day.societe  %}
+                {{ day.societe }}
+              {% elif day.travailleurs %}
+                {{ day.travailleurs.societe}}
+              {% else %}
+                <span>AUCUN</span>
+              {% endif %} 
+            </td>
+            <td><a href="{% url 'consultation:detail_consultation_jour' day.id %}">
+              {% if day.nom_prenoms  %}
+                {{ day.nom_prenoms|truncatewords:12 }}
+              {% elif day.travailleurs %}
+                {{ day.travailleurs.nom|truncatewords:12 }}
+              {% else %}
+                <span>AUCUN</span>
+              {% endif %}
+            </a></td>
+            <td>
+              {% if day.matricule  %}
+                {{ day.matricule }}
+              {% elif day.travailleurs %}
+                {{ day.travailleurs.matricule }}
+              {% else %}
+                <span>AUCUN</span>
+              {% endif %}
+            </td>  
+            <td>
+              {% if day.atelier  %}
+                {{ day.atelier }}
+              {% elif day.travailleurs %}
+                {{ day.travailleurs.atelier }}
+              {% else %}
+                <span>AUCUN</span>
+              {% endif %}
+            </td>              
             <td>{{ day.type_visite }}</td>
             <td>{{ day.aptitude }}</td>
             <td>{{ day.affection_connue }}</td>
-            <td>{{ day.nouvelle_affection }}</td>
-            <td>{{ day.observation|truncatewords:10 }}</td>
           </tr>
 
           {% empty %}

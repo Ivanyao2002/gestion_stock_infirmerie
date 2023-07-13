@@ -21,7 +21,7 @@ from users.views import Connexion, Deconnexion
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Connexion.as_view(), name='connexion'),
-    path('Se deconnecter/', Deconnexion.as_view(), name='deconnexion'),
+    path('log_out/', Deconnexion.as_view(), name='deconnexion'),
     path('stocks/', include('stocks.urls')),
     path('users/', include('users.urls')),
     path('consultation/', include('consultation.urls')),

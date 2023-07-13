@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -130,7 +129,7 @@ STATIC_URL = 'static/'
 
 
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'stocks:list_medocs'
+LOGIN_REDIRECT_URL = 'stocks:list_medocs'#Redirection par defaut après authentification/N'est plus necessaire si on utilise succuess_url dans l'heritage du loginView
 LOGOUT_REDIRECT_URL = 'connexion' 
 LOGIN_URL = 'connexion'
 

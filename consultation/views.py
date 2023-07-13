@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 
 from .models import Consultation_journaliere, Consultation_VMA
 from .forms import Consultation_JourForm, Consultation_VmaForm
+from stocks.models import Travailleurs
 
 # Create your views here.
 class ConsultationCreateView(LoginRequiredMixin, CreateView):
@@ -19,8 +20,19 @@ class ConsultationVmaCreateView(LoginRequiredMixin, CreateView):
     template_name = "vma_create.html"
     form_class = Consultation_VmaForm
     success_url = reverse_lazy('consultation:list_consultation_vma')
-    
 
+    def form_valid(self, form):
+        travailleur = form.cleaned_data.get('travailleurs')
+        nom = form.cleaned_data.get('nom_prenoms')
+        societe = form.cleaned_data.get('societe')
+        atelier = form.cleaned_data.get('atelier')
+
+        if travailleur is None and nom and societe and atelier:
+            travailleur = Travailleurs.objects.create(nom=nom, societe=societe, atelier=atelier)
+
+        form.instance.travailleurs = travailleur
+        return super().form_valid(form)
+    
 class ConsultationDayView(LoginRequiredMixin, ListView):
     model = Consultation_journaliere
     template_name = "day_list.html"
@@ -73,7 +85,6 @@ class ConsultationDayView(LoginRequiredMixin, ListView):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
-
 class ConsultationVmaView(LoginRequiredMixin, ListView):
     model = Consultation_VMA
     template_name = "vma_list.html"
@@ -125,3 +136,14 @@ class ConsultationVmaView(LoginRequiredMixin, ListView):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
+
+class ConsultationVmaDetailView(LoginRequiredMixin, DetailView):
+    model = Consultation_VMA
+    template_name = "vma_detail.html"
+    context_object_name = "details"
+
+class ConsultationJourDetailView(LoginRequiredMixin, DetailView):
+    model = Consultation_journaliere
+    template_name = "jour_detail.html"
+    context_object_name = "details"
+    

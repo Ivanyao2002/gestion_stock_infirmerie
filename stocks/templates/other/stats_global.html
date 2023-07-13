@@ -101,17 +101,30 @@
       </thead>
       <tbody>
           {% for stat in statistiques_societe %}
-          <tr>
+          {% if stat.travailleurs__societe == "CARENA" %}
+          <tr class="table-danger">
               <td>{{ stat.travailleurs__societe }}</td>
               <td>{{ stat.sorties_total }}</td>
               <td>{{ stat.pourcentage_sorties|floatformat:2 }}%</td>
               <td>{{ stat.sorties_total_plaq }}</td>
               <td>{{ stat.pourcentage|floatformat:2 }}%</td>
           </tr>
-          {% empty %}
-          <tr>
-              <td colspan="8" class="text-center">Aucune statistique à afficher.</td>
-          </tr>
+
+          {% endif %}
+
+          {% if stat.travailleurs__societe == "REGIE" %}
+              <tr class="table-warning">
+                <td>{{ stat.travailleurs__societe }}</td>
+                <td>{{ stat.sorties_total }}</td>
+                <td>{{ stat.pourcentage_sorties|floatformat:2 }}%</td>
+                <td>{{ stat.sorties_total_plaq }}</td>
+                <td>{{ stat.pourcentage|floatformat:2 }}%</td>
+            </tr>
+            {% endif %}
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">Aucune statistique à afficher.</td>
+            </tr>
           {% endfor %}
       </tbody>
     </table>

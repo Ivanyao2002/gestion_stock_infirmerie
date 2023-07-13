@@ -8,6 +8,8 @@ class Travailleurs(models.Model):
     choix = (
         ('CARENA','CARENA'),
         ('REGIE','REGIE'),
+        ('PRESTATAIRE','PRESTATAIRE'),
+        ('REGIE','REGIE'),
     )
 
     liste = (
@@ -22,9 +24,40 @@ class Travailleurs(models.Model):
         ('WICS','WICS'),
     )
 
+    departement = (
+        ('ADMINISTRATION','ADMINISTRATION'),
+        ('BOURBON','BOURBON'),
+        ('CHAUDRONNERIE','CHAUDRONNERIE'),
+        ('CHARPENTE MENUISERIE','CHARPENTE MENUISERIE'),
+        ('COMPTABILITE FINANCE','COMPTABILITE FINANCE'),
+        ('ELECTRICITE','ELECTRICITE'),
+        ('G4S','G4S'),
+        ('INFORMATIQUE ET TELECOM','INFORMATIQUE ET TELECOM'),
+        ('IRIS','IRIS'),
+        ('MAGASIN','MAGASIN'),
+        ('MACHINE OUTILS','MACHINE OUTILS'),
+        ('MAINTENANCE & TRAVAUX NEUFS','MAINTENANCE & TRAVAUX NEUFS'),
+        ('MANUTENTION ET LEVAGE','MANUTENTION ET LEVAGE'),
+        ('MECANIQUE BRD','MECANIQUE BRD'),
+        ('NAVIRE','NAVIRE'),
+        ('NETTOYAGE INDUSTRIEL','NETTOYAGE INDUSTRIEL'),
+        ('PEINTURE','PEINTURE'),
+        ('PEINTURE ANTICORROSION','PEINTURE ANTICORROSION'),
+        ('PRODUCTION','PRODUCTION'),
+        ('QUALITE ENVIRONNEMENT HYGIENE','QUALITE ENVIRONNEMENT HYGIENE'),
+        ('QUALITE ENVIRONNEMENT HYGIENE ET SECURITE','QUALITE ENVIRONNEMENT HYGIENE ET SECURITE'),
+        ('QHSE','QHSE'),
+        ('RESSOURCES HUMAINES','RESSOURCES HUMAINES'),
+        ('SAUVETAGE','SAUVETAGE'),
+        ('SUPPLY CHAIN','SUPPLY CHAIN'),
+        ('TUYAUTERIE','TUYAUTERIE'),
+        ('WICS','WICS'),
+    )
+
+
     nom = models.CharField(max_length=200,blank=False)#Contient le nom et les prénoms
     email = models.EmailField(max_length=200)
-    atelier = models.CharField(max_length=100,blank=False)
+    atelier = models.CharField(max_length=100, choices=departement)
     matricule = models.CharField(unique=True, max_length=50,blank=False)
     societe = models.CharField(max_length=20, choices=choix)
     societe_regie = models.CharField(max_length=20, choices=liste, blank=True)
@@ -41,7 +74,7 @@ class Travailleurs(models.Model):
         return cls.objects.filter(matricule=matricule) 
 
     def __str__(self) :
-        return self.nom
+        return f"{self.matricule} - {self.nom}"
     
 class Fournisseurs(models.Model):
     nom = models.CharField(max_length=30,blank=False)

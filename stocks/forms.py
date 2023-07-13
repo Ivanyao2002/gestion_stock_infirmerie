@@ -183,7 +183,7 @@ class TravailleursForm(forms.ModelForm):
 
         self.fields['atelier'].widget.attrs.update({
             'type':"text",
-            'class':"form-control ",
+            'class':"form-select ",
             'style':"color: #DC143C;",
             'id':"floatingInput",
             'placeholder':"Paracétamol",

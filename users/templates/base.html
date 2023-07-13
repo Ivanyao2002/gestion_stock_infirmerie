@@ -27,29 +27,31 @@
     <script src="{% static 'js/chart.js' %}"></script>
   </head>
 
+  {% if user.is_authenticated %}
   <body>
     <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow" style="background-color: #2C4178;"> 
+      {% if perms.stocks %}
       <a class="navbar-brand col-md-4 col-lg-2 col-xl-2 d-flex align-items-center" href="{% url 'stocks:list_medocs' %}">
         <img src="{% static 'img/carena_logo.jpg' %}" alt="image" class="img-fluid rounded float-start ms-2" style="width: 95px; height: 40px;">
         <h5 class="text-center flex-grow-1 h6 mt-2">Centre Médical</h5>
       </a>
+      {% else %}
+      <a class="navbar-brand col-md-4 col-lg-2 col-xl-2 d-flex align-items-center" href="{% url 'consultation:list_consultation_jour' %}">
+        <img src="{% static 'img/carena_logo.jpg' %}" alt="image" class="img-fluid rounded float-start ms-2" style="width: 95px; height: 40px;">
+        <h5 class="text-center flex-grow-1 h6 mt-2">Centre Médical</h5>
+      </a>
+      {% endif %}
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      {% if user.is_authenticated %}
+
       <span class="text-light text-start"> {{user.username|upper}}</span>
       <div class="navbar-nav d-flex flex-row">
-        <div class="nav-item ">
-          <a class="nav-link px-3" href="{% url 'users:compte' user.id %}"><i class="bi bi-person-circle m-3"> </i>Mon Compte</a>
-        </div>
-          
         <div class="nav-item ">
           <a class="nav-link px-3" href="{% url 'deconnexion' %}">Déconnexion</a>
         </div>
       </div>
-      {% endif %}
     </header>
-
     <div class="container-fluid">
         <div class="row">
           <nav id="sidebarMenu" class="col-lg-2 col-md-4 col-sm-12 d-md-block bg-light sidebar collapse">
@@ -76,7 +78,7 @@
                   </li>
 
                   <li class="border-top my-3"></li>
-
+                  {% if perms.stocks %}
                   <h1 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-0 text-body-secondary text-uppercase">
                     <span>GESTION DU STOCK</span>
                     <a class="link-secondary" href="#" aria-label="Add a new report">
@@ -120,16 +122,15 @@
                     </div>
                   </li>
                   <li class="border-top my-3"></li>
+                  {% endif %}
                   <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                      Account
+                      Compte
                     </button>
                     <div class="collapse" id="account-collapse">
-                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">New...</a></li>
-                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Profile</a></li>
-                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Settings</a></li>
-                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Sign out</a></li>
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                        <li><a href="{% url 'users:compte' user.id %}" class="link-dark d-inline-flex text-decoration-none rounded">Profil<i class="bi bi-person-circle ms-2"></i></a></li>
+                        <li><a href="{% url 'deconnexion' %}" class="link-dark d-inline-flex text-decoration-none rounded">Déconnexion</a></li>
                       </ul>
                     </div>
                   </li>
@@ -145,8 +146,9 @@
 
     <footer class="mt-5 py-1" style="background-color: #2C4178;">
       <div class="container">
-        <p class="text-center text-info m-3">Copyright Holder © 2023 - Tous Droits Réservés - CARENA-Centre Médical </p>
+        <p class="text-center text-info m-2 ms-5">Copyright Holder © 2023 - Tous Droits Réservés - CARENA-Centre Médical </p>
       </div>
     </footer>
   </body>
+  {% endif %}
 </html>  

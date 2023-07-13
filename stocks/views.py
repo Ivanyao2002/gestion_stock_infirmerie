@@ -1,29 +1,32 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.urls import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from openpyxl import Workbook
-from django.utils import timezone, formats
+from django.utils import formats
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
-from datetime import datetime
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from openpyxl.utils import get_column_letter
-from django.db.models import Sum, F, Count
-from chartjs.views.lines import BaseLineChartView
+from django.db.models import Sum
 
 from .models import Medicaments, Transactions, Travailleurs, Fournisseurs
 from .forms import MedicamentsForm, TravailleursForm, FournisseursForm
 
 # Create your views here.
 
-class HomeMedocView(LoginRequiredMixin, ListView):
-    model = Medicaments #raccourcis pour dire queryset=Medicaments.objects.all()
+class HomeMedocView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Medicaments 
     template_name = "stocks_list.html"
     context_object_name = "medocs"
-    # redirect_field_name = 'next'  # Utilisez 'next' comme nom d'argument de requête
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
+    
+    def get_test_func(self):
+        return self.test_func
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         medicaments = Medicaments.objects.all()
@@ -33,7 +36,15 @@ class HomeMedocView(LoginRequiredMixin, ListView):
         context['medocs'] = page_obj
         return context
     
+    #On fusionne les dispatch des differentes classes (le dispatch de loginrequiredmixin, celui du listview et userpassestestmixin)
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        
+        user_test_result = self.get_test_func()()
+        if not user_test_result:
+            return self.handle_no_permission()
+
         if request.method == 'POST':
             return self.post(request, *args, **kwargs)
         else:
@@ -63,48 +74,38 @@ class HomeMedocView(LoginRequiredMixin, ListView):
 
         return render(request, 'stocks_list.html', context)
     
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
-
-class CreateMedocView(LoginRequiredMixin, CreateView):
+class CreateMedocView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Medicaments
     template_name = "stocks_create.html"
     form_class = MedicamentsForm
     success_url = reverse_lazy('stocks:list_medocs')
 
-    # def form_valid(self, form):
-    #     response = super().form_valid(form)
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
 
-    #     # Vérifier si le formulaire est valide
-    #     if form.is_valid():
-    #         # Récupérer le médicament créé
-    #         self.object = form.save()
 
-    #     messages.success(self.request,"Medicament crée avec succès.")
-
-    #     return response
-    # def get_success_url(self):
-    #     # Redirection vers la liste des médicaments
-    #     return reverse_lazy('stocks:list_medocs')
-
-class UpdateMedocView(LoginRequiredMixin, UpdateView):
+class UpdateMedocView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Medicaments
     template_name = "stocks_update.html"
     form_class = MedicamentsForm
     success_url = reverse_lazy('stocks:list_medocs')
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()    
 
-class DeleteMedocView(LoginRequiredMixin, DeleteView):
+
+class DeleteMedocView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Medicaments
     template_name = "stocks_delete.html"
     success_url = reverse_lazy('stocks:list_medocs')
     context_object_name = "medoc"
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
 
-class TransactionView(LoginRequiredMixin, ListView):
+
+class TransactionView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Medicaments 
     context_object_name = "medocs"
     template_name = "retrait.html"
@@ -118,7 +119,20 @@ class TransactionView(LoginRequiredMixin, ListView):
         context['medocs'] = page_obj
         return context
     
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
+    
+    def get_test_func(self):
+        return self.test_func    
+    
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        
+        user_test_result = self.get_test_func()()
+        if not user_test_result:
+            return self.handle_no_permission()
+
         if request.method == 'POST':
             return self.post(request, *args, **kwargs)
         else:
@@ -139,16 +153,17 @@ class TransactionView(LoginRequiredMixin, ListView):
 
         return render(request, 'retrait.html', context)
     
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
-
-class RechercheView(LoginRequiredMixin, ListView):
+class RechercheView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Medicaments 
     context_object_name = "medocs"
     template_name = "transaction/transaction_create.html"
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
+    
+    def get_test_func(self):
+        return self.test_func
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -160,6 +175,13 @@ class RechercheView(LoginRequiredMixin, ListView):
         return context
     
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        
+        user_test_result = self.get_test_func()()
+        if not user_test_result:
+            return self.handle_no_permission()
+
         if request.method == 'POST':
             return self.post(request, *args, **kwargs)
         else:
@@ -180,16 +202,17 @@ class RechercheView(LoginRequiredMixin, ListView):
 
         return render(request, 'transaction/transaction_create.html', context)
     
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
-
-class HomeTransactionView(LoginRequiredMixin, ListView):
+class HomeTransactionView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Transactions
     template_name = "transaction/transaction_list.html"
     context_object_name = "transactions"
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
+    
+    def get_test_func(self):
+        return self.test_func
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -201,6 +224,13 @@ class HomeTransactionView(LoginRequiredMixin, ListView):
         return context
     
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        
+        user_test_result = self.get_test_func()()
+        if not user_test_result:
+            return self.handle_no_permission()
+
         if request.method == 'POST':
             return self.post(request, *args, **kwargs)
         else:
@@ -234,11 +264,8 @@ class HomeTransactionView(LoginRequiredMixin, ListView):
 
         return render(request, 'transaction/transaction_list.html', context)
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
+@user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
 @login_required
 def achat(request, slug):
     medicament = get_object_or_404(Medicaments, slug= slug)
@@ -259,8 +286,6 @@ def achat(request, slug):
         
             transaction = Transactions(medicaments=medicament,type_transaction=Transactions.ACHAT, quantite=quantite, quantite_plaq=qtite_plaq, fournisseur=fournisseur, user=request.user)
             transaction.save(request=request)
-            # Ajout de la notification
-            # messages.success(request, "Vous avez bien augmenté le stock.")
         
             return redirect('stocks:list_transaction')
         else:
@@ -268,6 +293,7 @@ def achat(request, slug):
         
     return render(request, 'transaction/ajouter_medoc.html', {'medicament': medicament, 'fournisseurs':fournisseurs})
 
+@user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
 @login_required
 def vente(request, slug):
     medicament = get_object_or_404(Medicaments, slug= slug)
@@ -287,8 +313,6 @@ def vente(request, slug):
                 
                 transaction = Transactions(medicaments=medicament, type_transaction=Transactions.VENTE, quantite=quantite, quantite_plaq=qtite_plaq, travailleurs=travailleur, user=request.user)
                 transaction.save(request=request) # Passer l'utilisateur connecté à la transaction
-
-                # messages.success(request, "Vous avez bien diminué le stock.")
                 
                 return redirect('stocks:list_transaction')
             else:
@@ -299,6 +323,7 @@ def vente(request, slug):
         
     return render(request, 'transaction/retirer_medoc.html', {'medicament': medicament, 'travailleurs':travailleurs})
 
+@user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
 @login_required
 def exporter_liste_medicaments(request):
     medocs = Medicaments.objects.all()
@@ -342,10 +367,16 @@ def exporter_liste_medicaments(request):
     return response
 
 
-class HomeWorkView(LoginRequiredMixin, ListView):
+class HomeWorkView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Travailleurs
     template_name = "users/worker.html"
     context_object_name = "travailleur"
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
+    
+    def get_test_func(self):
+        return self.test_func
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -357,6 +388,13 @@ class HomeWorkView(LoginRequiredMixin, ListView):
         return context
     
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        
+        user_test_result = self.get_test_func()()
+        if not user_test_result:
+            return self.handle_no_permission()
+
         if request.method == 'POST':
             return self.post(request, *args, **kwargs)
         else:
@@ -380,27 +418,35 @@ class HomeWorkView(LoginRequiredMixin, ListView):
 
         return render(request, 'users/worker.html', context)
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
-
-class HomeFournView(LoginRequiredMixin, ListView):
+class HomeFournView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Fournisseurs
     template_name = "users/fournisseur.html"
     context_object_name = "fournisseur"
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
+    
+    def get_test_func(self):
+        return self.test_func
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         fournisseur = Fournisseurs.objects.all()
-        paginator = Paginator(fournisseur, 10) #chaque page affiche fournisseur
+        paginator = Paginator(fournisseur, 10) #chaque page affiche 10 fournisseurs
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['fournisseur'] = page_obj
         return context
-
+ 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        
+        user_test_result = self.get_test_func()()
+        if not user_test_result:
+            return self.handle_no_permission()
+
         if request.method == 'POST':
             return self.post(request, *args, **kwargs)
         else:
@@ -424,40 +470,46 @@ class HomeFournView(LoginRequiredMixin, ListView):
 
         return render(request, 'users/fournisseur.html', context)
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
-
-class CreateWorkerView(LoginRequiredMixin, CreateView):
+class CreateWorkerView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Travailleurs
     template_name = "users/worker_create.html"
     form_class = TravailleursForm
     success_url = reverse_lazy('stocks:list_worker')
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
 
-class CreateFournView(LoginRequiredMixin, CreateView):
+
+class CreateFournView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Fournisseurs
     template_name = "users/fournisseur_create.html"
     form_class = FournisseursForm
     success_url = reverse_lazy('stocks:list_fournisseur')
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
 
-class DeleteWorker(LoginRequiredMixin, DeleteView):
+class DeleteWorker(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Travailleurs
     template_name = "users/worker_delete.html"
     context_object_name = "travailleurs"
     success_url = reverse_lazy('stocks:list_worker')
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
 
-class DeleteFournisseur(LoginRequiredMixin, DeleteView):
+class DeleteFournisseur(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Fournisseurs
     template_name = "users/fournisseur_delete.html"
     context_object_name = "fournisseurs"
     success_url = reverse_lazy('stocks:list_fournisseur')
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admins').exists()
 
+@user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
+@login_required
 def export_transactions(request):
     transactions = Transactions.objects.all()  # Récupérez les transactions selon vos critères de filtrage
 
@@ -490,11 +542,13 @@ def export_transactions(request):
 
     return response   
 
-
+@user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
+@login_required
 def expoter(request):
     return render(request, 'transaction/export.html')
 
-
+@user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
+@login_required
 def export_etat(request):
   # Récupérer les paramètres de la requête GET
     categorie = request.GET.get('categorie')
@@ -560,46 +614,11 @@ def export_etat(request):
     return response
 
 
-class Statistiques(BaseLineChartView):
-    def get_labels(self):
-        labels = []
-        statistiques = Transactions.objects.filter(
-            type_transaction=Transactions.VENTE
-        ).values(
-            'medicaments__nom_medoc', 'travailleurs__societe'
-        ).annotate(
-            sorties_total=Sum('quantite')
-        ).order_by('-sorties_total')
-        for stat in statistiques:
-            labels.append(f"{stat['medicaments__nom_medoc']} ({stat['travailleurs__societe']})")
-        return labels
-
-    def get_providers(self):
-        return ['Sorties']
-
-    def get_data(self):
-        data = []
-        statistiques = Transactions.objects.filter(
-            type_transaction=Transactions.VENTE
-        ).values(
-            'medicaments__nom_medoc', 'travailleurs__societe'
-        ).annotate(
-            sorties_total=Sum('quantite')
-        ).order_by('-sorties_total')
-        for stat in statistiques:
-            data.append(stat['sorties_total'])
-        return [data]
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['labels'] = self.get_labels()
-        context['data'] = self.get_data()
-        return context
-
 def generate_years():
     return range(2010, 2061)
 
-
+@user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
+@login_required
 def statistiques_details(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
@@ -630,7 +649,8 @@ def statistiques_details(request):
 
     return render(request, 'other/statistiques.html', {'statistiques': statistiques, 'total_sorties_boite': total_sorties_boite, 'years': generate_years(), 'total_sorties_plaq': total_sorties_plaq})
 
-
+@user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
+@login_required
 def statistiques_global(request):
     month = request.GET.get('month')
     year = request.GET.get('year')

@@ -15,13 +15,19 @@
                 <div class="card-body">
                     <main class="form-signin">
                         <div class="row">
-                            <div class="col-12 col-md-6 col-lg-6">
-                                <div class="form-floating mt-2 text-info">
-                                {{ form.nom_prenoms}}
-                                <label for="nom_prenoms" class="text-primary">Nom et Prénoms</label>  
+                            <div class="col-12 col-md-4 col-lg-4">
+                                <div class="form-floating mt-2">
+                                {{ form.travailleurs}}
+                                <label for="travailleurs" class="text-primary">Travailleur</label>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-lg-6">
+                            <div class="col-12 col-md-4 col-lg-4">
+                                <div class="form-floating mt-2">
+                                {{ form.matricule}}
+                                <label for="matricule" class="text-primary">Matricule</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 col-lg-4">
                                 <div class="form-floating mt-2 text-info">
                                 {{ form.societe}}
                                 <label for="societe" class="text-primary">Société</label>  
@@ -31,9 +37,9 @@
                         
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-6">
-                                <div class="form-floating mt-2">
-                                {{ form.matricule}}
-                                <label for="matricule" class="text-primary">Matricule</label>
+                                <div class="form-floating mt-2 text-info">
+                                {{ form.nom_prenoms}}
+                                <label for="nom_prenoms" class="text-primary">Nom et Prénoms</label>  
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
@@ -116,18 +122,20 @@
                 </div>
                 <div class="card-footer">
                     <div class="row">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <a href="{% url 'consultation:list_consultation_vma' %}" class="w-100 btn btn-lg btn-outline-danger">Annuler</a>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
+                            <button class="w-100 btn btn-lg btn-outline-secondary" type="button" onclick="viderFormulaire()">Vider</button>
+                        </div>
+                        <div class="col-12 col-md-4">
                             <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Ajouter</button>
                         </div>
                     </div>
                 </div>
-                
             </div>
       </form>
-    </div>
+    </div>    
 
     <!-- Ajoutez une div pour la pop-up -->
     <div id="success-popup" style="display: none; text-align: center;">
@@ -178,6 +186,12 @@
           });
       });
   });
+</script>
+
+<script>
+    function viderFormulaire() {
+        document.getElementById("consultations-forms").reset();
+    }
 </script>
 
 {% endblock %}

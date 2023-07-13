@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Detail de la consultation VMA pour <span class="h3">{{ details.nom_prenoms }}</span></h1>
+  </div>
+  <br>
+
+  <br><br>
+  <!-- <h2>Section title</h2> -->
+  <div class="container mb-3">
+    <div class="row">
+        <div class="col-12">
+            <p><strong>Emploi occupé :</strong> {{ details.emploi_occupe }}</p>
+            <p><strong>Age :</strong> {{ details.age }}</p>
+            <p><strong>Examen Réalisé :</strong> {{ details.examen_realise }}</p>
+            <p><strong>Nature du risque :</strong> {{ details.nature_risque }}</p>
+            <p><strong>Observation :</strong> {{ details.observation }}</p>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 col-md-6 text-start">
+            <a href="{% url 'consultation:list_consultation_vma' %}" class="w-100 btn btn-lg btn-outline-danger">Retour</a>
+        </div>
+    </div>
+  </div>  
+</main>
+
+{% endblock %}

@@ -3,18 +3,17 @@
 {% block title %} <title>Utilisateurs</title> {% endblock %}
 
 {% block body %}
-<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mb-5">
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-5 mb-4">
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-5 border-bottom">
     <h1 class="h2">Mettre à jour les infos du compte</h1>
   </div>
 
-  <br><br>
   <!-- <h2>Section title</h2> -->
-  <div class="container mb-5">
+  <div class="container">
     <form method="post">
       {% csrf_token %}
-      <div class="card mb-5">
-        <div class="card-body mb-5">
+      <div class="card">
+        <div class="card-body">
           <main class="form-signin">
             <div class="row">
               <div class="col-12">
@@ -29,10 +28,10 @@
                   <label for="code_medoc" class="text-primary">Email</label>  
                 </div>
               </div>
-              <div class="col-12 mt-5 text-center text-primary">
+              <div class="col-12 mt-4 text-center text-primary">
                 <p class="text-lead">
                   <a href="{% url 'users:password_change' %}" class="nav-link">
-                    Changer de mot de passes <i class="ms-2 bi bi-pencil-square"></i> 
+                    Changer de mot de passe <i class="ms-2 bi bi-pencil-square"></i> 
                   </a>
                 </p>
               </div>
@@ -42,8 +41,12 @@
         <div class="card-footer">
           <div class="row">
             <div class="col-12 col-md-6">
-                <a href="{% url 'stocks:list_medocs' %}" class="w-100 btn btn-lg btn-outline-danger">Annuler</a>
-            </div>
+              {% if perms.stocks %}
+                <a href="{% url 'stocks:list_medocs' %}" class="w-100 btn btn-lg btn-outline-danger">Retour</a>
+              {% elif perms.consultation %}  
+              <a href="{% url 'consultation:list_consultation_jour' %}" class="w-100 btn btn-lg btn-outline-danger">Retour</a>
+              {% endif %}
+              </div>
             <div class="col-12 col-md-6">
                 <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Modifier</button>
             </div>

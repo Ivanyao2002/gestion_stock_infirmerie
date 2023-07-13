@@ -74,9 +74,9 @@
             <th scope="col">APTITUDE</th>
             <th scope="col">AFFECTION CONNUE</th>
             <th scope="col">NOUVELLE AFFECTION</th>
-            <th scope="col">NATURE DU RISQUE</th>
-            <th scope="col">EXAMEN REALISE</th>
-            <th scope="col">OBSERVATIONS</th>
+            <!-- <th scope="col">NATURE DU RISQUE</th>
+            <th scope="col">EXAMEN REALISE</th> -->
+            <!-- <th scope="col">OBSERVATIONS</th> -->
           </tr>
         </thead>
         <tbody>
@@ -84,17 +84,46 @@
           <tr>
             <td>{{ vm.id }}</td>
             <td>{{ vm.date_consultation }}</td>
-            <td>{{ vm.societe }}</td>
-            <td>{{ vm.nom_prenoms|truncatewords:12 }}</td>
-            <td>{{ vm.matricule }}</td>  
-            <td>{{ vm.atelier }}</td>              
+            <td>
+              {% if vm.societe  %}
+                {{ vm.societe }}
+              {% elif vm.travailleurs %}
+                {{ vm.travailleurs.societe}}
+              {% else %}
+                <span>AUCUN</span>
+              {% endif %} 
+            </td>
+            <td><a href="{% url 'consultation:detail_consultation_vma' vm.id %}">
+              {% if vm.nom_prenoms  %}
+                {{ vm.nom_prenoms|truncatewords:12 }}
+              {% elif vm.travailleurs %}
+                {{ vm.travailleurs.nom|truncatewords:12 }}
+              {% else %}
+                <span>AUCUN</span>
+              {% endif %}
+            </a></td>
+            <td>
+              {% if vm.matricule  %}
+                {{ vm.matricule }}
+              {% elif vm.travailleurs %}
+                {{ vm.travailleurs.matricule }}
+              {% else %}
+                <span>AUCUN</span>
+              {% endif %}
+            </td>  
+            <td>
+              {% if vm.atelier  %}
+                {{ vm.atelier }}
+              {% elif vm.travailleurs %}
+                {{ vm.travailleurs.atelier }}
+              {% else %}
+                <span>AUCUN</span>
+              {% endif %}
+            </td>              
             <td>{{ vm.type_visite }}</td>
             <td>{{ vm.aptitude }}</td>
             <td>{{ vm.affection_connue }}</td>
             <td>{{ vm.nouvelle_affection }}</td>
-            <td>{{ vm.examen_realise }}</td>
-            <td>{{ vm.nature_risque }}</td>
-            <td>{{ vm.observation|truncatewords:10 }}</td>
           </tr>
 
           {% empty %}
