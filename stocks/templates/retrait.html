@@ -6,7 +6,7 @@
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Faire une nouvelle transaction de retrait</h1>
+      <h1 class="h2">Faire une nouvelle transaction de retrait<i class="bi bi-dash-square ms-2"></i></h1>
     </div>
     <br>
     <div class="container">
@@ -14,11 +14,11 @@
           <div class="col-12 col-md-8 col-lg-8">
             <form method="POST" action="" class="row g-3 align-items-center d-flex" role="search">
                 {% csrf_token %}
-                <div class="col-auto">
+                <div class="col-12 col-md-6">
                     <input type="search" id="search_nom" name="nom_medoc" class="form-control" placeholder="Exemple : Paracétamol">
                 </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+                <div class="col-12 col-md-6">
+                  <button type="submit" class="btn btn-outline-primary btn-sm">Rechercher<i class="bi bi-search h6 ms-3"></i></button>
                 </div>
               </form>
           </div>

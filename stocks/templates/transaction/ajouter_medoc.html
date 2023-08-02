@@ -5,8 +5,8 @@
 {% block body %}
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Ajout sur le stock de {{ medicament.nom_medoc }}</h1>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-2 border-bottom">
+      <h1 class="h2">Ajout sur le stock de {{ medicament.nom_medoc }}<i class="bi bi-capsule ms-1"></i></h1>
     </div>
     <br>
     
@@ -41,10 +41,10 @@
                 <div class="container">
                   <div class="row text-center">
                     <div class="col-12 col-md-4 col-lg-4">
-                      <a href="{% url 'stocks:create_transaction' %}" class="btn btn-outline-danger">Retour</a>
+                      <a href="{% url 'stocks:create_transaction' %}" class="btn btn-outline-danger"><i class="bi bi-arrow-left me-2"></i>Retour</a>
                     </div>
                     <div class="col-12 col-md-8 col-lg-8">
-                      <button type="submit" class="btn btn-outline-primary">Ajouter au stock</button>
+                      <button type="submit" class="btn btn-outline-primary"><i class="bi bi-plus-lg me-2"></i>Ajouter au stock</button>
                     </div>
                   </div>
                 </div>

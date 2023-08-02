@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Détail de la consultation périodique pour <span class="h3">{{ details.nom_prenoms }}<i class="bi bi-file-medical ms-2"></i></span></h1>
+    </div>
+    <br>
+
+    <br><br>
+    <!-- <h2>Section title</h2> -->
+    <div class="container mb-3">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Société :</strong>{% if details.societe %} {{ details.societe }} {% else %} Aucune {% endif %}</p>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Departement :</strong>{% if details.atelier %} {{ details.atelier }} {% else %} Aucun {% endif %}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Examen réalisé :</strong>{% if details.exam %} 
+                    {% for value in details.exam %}
+                    <span>{{ value }},</span>
+                    {% endfor %}
+                    {% else %} Aucun {% endif %}
+                </p>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Nature du risque :</strong>{% if details.risks %} {{ details.risks }} {% else %} Aucune {% endif %}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Autre pathhologie :</strong>{% if details.other_pathology %} {{ details.other_pathology }} {% else %} Aucune {% endif %}</p>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Autre Examen :</strong>{% if other_exam %} {{ other_exam }} {% else %} Aucun {% endif %}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Nombre de jours de congés :</strong>{% if details.break_day %} {{ details.break_day }} {% else %} 0 {% endif %}</p>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Evacuation :</strong> {% if details.evacuation %} Oui {% else %} Non {% endif %}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Observation :</strong>{% if details.observations %} {{ details.observations }} {% else %} Aucun {% endif %}</p>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12 col-md-6 text-start">
+                <a href="{% url 'consultation:list_consultation_vma' %}" class="w-75 btn btn-md btn-outline-danger">Retour</a>
+            </div>
+            <div class="col-12 col-md-6">
+                <a href="{% url 'consultation:update_consultation_breakperiodic' details.id %}" class="w-75 btn btn-md btn-outline-primary">Apportez des modifications<i class="bi bi-check2-all ms-1"></i></a>
+            </div>
+        </div>
+    </div>  
+</main>
+
+{% endblock %}

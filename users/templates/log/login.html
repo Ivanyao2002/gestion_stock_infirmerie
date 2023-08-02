@@ -21,6 +21,22 @@
                 align-items: center;
                 height: 75vh;
             }
+
+            .scrolling-text {
+            white-space: nowrap;
+            overflow: hidden;
+            animation: scroll 1s linear;
+            color: #2f59c4;
+            }
+
+            @keyframes scroll {
+            0% {
+                transform: translateX(-100%);
+            }
+            0% {
+                transform: translateX(30%);
+            }
+            }
         </style>
     </head>
 
@@ -28,6 +44,11 @@
         <div class="container" style="margin-top: 100px;">
             <div class="w-50">
                 <div class="col-12 text-center">
+                     <div class="scrolling-text">
+                        <p class="lead">
+                            Bienvenue sur l'application du centre médical de CARENA.<i class="bi bi-hospital m-2"></i>
+                        </p>
+                    </div>
                     <form action="" method="POST" class="form-signin">
                         {% csrf_token %}
                         <div class="card border  rounded border-3 "> <!-- border-dark -->
@@ -59,7 +80,8 @@
                             </div>
                         </div>
                     </form>
-                  <p class="mt-5 mb-3 text-primary">&copy; 2023–2024 CARENA-Centre Médical</p>
+                  <p class="mt-5 mb-3" style="color: #2f59c4;">&copy; 2023-<script type="text/javascript">
+                    document.write(new Date().getFullYear());</script> <noscript>2023</noscript> CARENA-Centre Médical<i class="bi bi-hospital ms-2"></i></p>
                 </div>
             </div>
         </div>    

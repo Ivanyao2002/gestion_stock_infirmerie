@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Consultation Périodique<i class="bi bi-file-medical ms-2"></i></h1>
+  </div>
+  <br><br>
+
+  <div class="container">
+    <form method="POST" id="consultations-forms">
+      {% csrf_token %}
+      <div class="card">
+        <div class="card-body">
+          <main class="form-signin">
+            <div id="form-errors">
+              {% if form.errors %}
+                <div class="alert alert-danger">
+                  <ul>
+                    {% for field in form %}
+                      {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            </div>
+            
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-6">
+                  <div class="form-floating mt-2" style="font-size: 16px;">
+                  {{ form.matricule}}
+                  <label for="matricule" class="text-primary">Matricule</label>
+                  </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                  <div class="form-floating mt-2" style="font-size: 16px;">
+                  {{ form.nom_prenoms }}
+                  <label for="nom_prenoms" class="text-primary">Nom et prénoms</label>  
+                  </div>
+              </div>
+            </div>
+              
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2" style="font-size: 17px;">
+                    {{ form.societe}}
+                    <label for="societe" class="text-primary">Société</label>  
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2" style="font-size: 17px;">
+                    {{ form.atelier}}
+                    <label for="atelier" class="text-primary">Département</label>  
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="form-floating mt-2" style="font-size: 17px;">
+                {{ form.reasons}}
+                <label for="reasons" class="text-primary">Motif de visite</label>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="form-floating mt-2" style="font-size: 17px;">
+                    {{ form.aptitude}}
+                    <label for="aptitude" class="text-primary">Aptitude</label>  
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="row">
+                  <div class="col-12 col-md-12 col-lg-12">
+                    <div class="mt-2">
+                      <div class="style">
+                        {{ form.pathology}}  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-md-12 col-lg-12">
+                    <div class="mt-2">
+                      <div class="style">
+                        {{ form.exam}}  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-md-12 col-lg-12">
+                    <div class="mt-2">
+                      <div class="style">
+                        {{ form.risks}}  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="row">
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-3" style="font-size: 16px;">
+                        {{ form.break_day}}
+                        <label for="break_day" class="text-primary">Nombre de jours de congés</label>  
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-check" style="margin-top: 30px; font-size: 17px;">
+                        {{ form.evacuation}}
+                        <label for="evacuation" class="text-primary">Evacuation</label>  
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-md-12 col-lg-12">
+                    <div class="form-floating mt-2" style="font-size: 16px;">
+                        {{ form.observations}}
+                        <label for="observations" class="text-primary">Observations</label>  
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-6" id="divAutrePathologie" style="display: none;">
+                <div class="form-floating mt-2">
+                    {{ form.other_pathology}}
+                    <label for="other_pathology" class="text-primary" style="font-size: 16px;">Autre pathologie</label>  
+                </div>
+              </div> 
+              <div class="col-12 col-md-6 col-lg-6" id="divOtherExam" style="display: none;">
+                <div class="form-floating mt-2">
+                    {{ form.other_exam}}
+                    <label for="other_exam" class="text-primary" style="font-size: 16px;">Autre examen</label>  
+                </div>
+              </div> 
+            </div>
+          </main>
+        </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-12 col-md-4">
+                <a href="{% url 'consultation:list_consultation_vma' %}" class="w-75 btn btn-md btn-outline-danger">Retour<i class="bi bi-arrow-left ms-2"></i></a>
+            </div>
+            <div class="col-12 col-md-4">
+                <button class="w-75 btn btn-md btn-outline-secondary" type="button" onclick="viderFormulaire()">Vider<i class="bi bi-trash ms-1"></i></button>
+            </div>
+            <div class="col-12 col-md-4">
+                <button class="w-75 btn btn-md btn-outline-primary" type="submit">Enregistrer<i class="bi bi-check2-all ms-1"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>    
+
+  <!-- Ajoutez une div pour la pop-up -->
+  <div id="success-popup" style="display: none; text-align: center;">
+    <p>La consultation a été ajouté avec succès.</p>
+    <p>Cliquez sur "OK" pour revenir à la liste des consultations.</p>
+    <button id="ok-button" class="btn btn-primary btn-md">OK</button>  
+  </div>
+</main>
+
+<script>
+  $(document).ready(function() {
+    $('#matricule').on('input', function() {
+      var matricule = $(this).val();
+      $.ajax({
+        url: '{% url "consultation:get_nom" %}',
+        data: { 'matricule': matricule },
+        dataType: 'json',
+        success: function(data) {
+          $('#nom_prenoms').val(data.nom);
+          $('#societe').val(data.societe);
+          $('#atelier').val(data.atelier);
+        },
+        error: function() {
+          $('#nom_prenoms').val("");
+          $('#societe').val("");
+          $('#atelier').val("");
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+      $('#consultations-forms').on('submit', function(e) {
+          // Empêcher la soumission normale du formulaire
+          e.preventDefault();
+
+          // Effectuer une requête AJAX pour envoyer le formulaire
+          $.ajax({
+              type: 'POST',
+              url: $(this).attr('action'),
+              data: $(this).serialize(),
+              success: function(response) {
+                if (response.success){
+                  // Afficher la pop-up de succès
+                  $('#success-popup').dialog({
+                      modal: true,
+                      autoOpen: true,
+                      title: 'Nouvelle consultation périodique ajoutée',
+                      width: 400,
+                      height: 'auto'
+                  });
+                  // Appliquer la couleur personnalisée au titre de la pop-up
+                  $('.ui-dialog-title').css({'color':'#2C4178','text-align': 'center',});
+
+                  // Gérer le clic sur le bouton "OK"
+                  $('#ok-button').on('click', function() {
+                        window.location.href = "{% url 'consultation:list_consultation_vma' %}"; 
+                });
+              }else{
+                  // Convertir l'objet JSON en chaîne JSON lisible
+                  var errorsString = JSON.stringify(response.errors, null, 2);
+                  // Afficher les erreurs dans le template
+                  $('#form-errors').html('<div class="alert alert-danger">' + errorsString + '</div>');
+                        // Gérer les interactions avec les champs
+                        $('.form-control').on('input change', function() {
+                        // Cacher les erreurs lorsque l'utilisateur commence à saisir
+                        $('#form-errors').hide();
+                    });
+              }
+              },
+              error: function(error) {
+                  // Gérer les erreurs de requête
+                  alert('Une erreur s\'est produite lors de l\'enregistrement de la consultation.')
+              }
+          });
+      });
+  });
+</script>
+
+<script>
+    function viderFormulaire() {
+        document.getElementById("consultations-forms").reset();
+    }
+</script>
+
+<script>
+  $(document).ready(function() {
+    $('#risks').select2(
+      {
+      placeholder: 'Sélectionne un ou plusieurs risques.',
+      }
+    );
+
+    $('#pathology').select2(
+      {
+      placeholder: 'Sélectionne une ou plusieurs pathologies.',
+      }
+    );
+
+    // Détecte le changement d'options dans le champ 'pathology'
+    $('#pathology').on('change', function() {
+      // Vérifie si l'option 'Autres' est sélectionnée
+      if ($(this).val() && $(this).val().includes('Autres')) {
+          // Affiche les champs supplémentaires si l'option 'Autres' est sélectionnée
+          $('#divAutrePathologie').show();
+      } else {
+          // Cache les champs supplémentaires si 'Autres' n'est pas sélectionné
+          $('#divAutrePathologie').hide();
+      }
+    });
+
+    $('#exam').select2(
+      {
+      placeholder: 'Sélectionne un ou plusieurs examens.',
+      }
+    );
+
+        // Détecte le changement d'options dans le champ 'exam'
+        $('#exam').on('change', function() {
+          // Vérifie si l'option 'Autres' est sélectionnée
+          if ($(this).val() && $(this).val().includes('Autres')) {
+              // Affiche les champs supplémentaires si l'option 'Autres' est sélectionnée
+              $('#divOtherExam').show();
+          } else {
+              // Cache les champs supplémentaires si 'Autres' n'est pas sélectionné
+              $('#divOtherExam').hide();
+          }
+        });
+  });
+</script>
+
+{% endblock %}
+  

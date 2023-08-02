@@ -6,7 +6,7 @@
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Modifier ce médicament</h1>
+      <h1 class="h2">Modifier ce médicament<i class="bi bi-capsule ms-1"></i></h1>
     </div>
     <br><br>
 
@@ -22,7 +22,7 @@
                     {{ form.code_medoc}}
                     <label for="code_medoc" class="text-primary">Code du Médicament</label>  
                   </div>
-                </div>
+                </div> 
                 <div class="col-12 col-md-6 col-lg-6">
                   <div class="form-floating mt-2 text-info">
                     {{ form.nom_medoc}}
@@ -60,16 +60,25 @@
                     <label for="fournisseur" class="text-primary">Fournisseur</label>  
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <div class="form-floating mt-2">
+                      {{ form.quantité_detail}}
+                      <label for="quantité_detail" class="text-primary">Quantité Plaquettes</label>  
+                    </div>
+                  </div>
+                </div>
               </div>
             </main>
           </div>
             <div class="card-footer">
-              <div class="row">
+              <div class="row text-center">
                   <div class="col-12 col-md-6">
-                      <a href="{% url 'stocks:list_medocs' %}" class="w-100 btn btn-lg btn-outline-danger">Annuler</a>
+                      <a href="{% url 'stocks:list_medocs' %}" class="w-50 btn btn-md btn-outline-danger"><i class="bi bi-arrow-left me-2"></i>Retour</a>
                   </div>
                   <div class="col-12 col-md-6">
-                      <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Modifier</button>
+                      <button class="w-50 btn btn-md btn-outline-primary" type="submit">Modifier<i class="bi bi-arrow-repeat ms-2"></i></button>
                   </div>
               </div>
             </div>

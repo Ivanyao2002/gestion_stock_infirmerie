@@ -5,7 +5,7 @@
 {% block body %}
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-5 mb-4">
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-5 border-bottom">
-    <h1 class="h2">Mettre à jour les infos du compte</h1>
+    <h1 class="h2">Mettre à jour les infos du compte<i class="bi bi-person-square ms-2"></i></h1>
   </div>
 
   <!-- <h2>Section title</h2> -->
@@ -39,16 +39,16 @@
           </main>
         </div>
         <div class="card-footer">
-          <div class="row">
+          <div class="row text-center">
             <div class="col-12 col-md-6">
               {% if perms.stocks %}
-                <a href="{% url 'stocks:list_medocs' %}" class="w-100 btn btn-lg btn-outline-danger">Retour</a>
-              {% elif perms.consultation %}  
-              <a href="{% url 'consultation:list_consultation_jour' %}" class="w-100 btn btn-lg btn-outline-danger">Retour</a>
+                <a href="{% url 'stocks:list_medocs' %}" class="w-50 btn btn-md btn-outline-danger"><i class="bi bi-arrow-left me-2"></i>Retour</a>
+              {% else %}  
+              <a href="{% url 'consultation:list_consultation_jour' %}" class="w-50 btn btn-md btn-outline-danger"><i class="bi bi-arrow-left me-2"></i>Retour</a>
               {% endif %}
               </div>
             <div class="col-12 col-md-6">
-                <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Modifier</button>
+                <button class="w-50 btn btn-md btn-outline-primary" type="submit">Modifier<i class="bi bi-arrow-repeat ms-2"></i></button>
             </div>
           </div>
         </div>

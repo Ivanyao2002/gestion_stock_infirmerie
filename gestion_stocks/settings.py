@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -23,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-fy70+)z5*nsey92r@xzphpo%#-vhqa@ly+b=x_%106p&_a_04a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  #Si debug est definir sur faux , on doit definir l'url dans allowed_hosts lorsqu'on utilise le server apache
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] #Contient l'url de notre application(une liste d'url)
 
 # Application definition
 
@@ -38,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'stocks',
-    'consultation', 
+    'consultations', 
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [
+#     # Chemin absolu vers le répertoire des fichiers statiques de votre projet
+#     os.path.join(BASE_DIR, 'static'),
+# ]
 
 AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'stocks:list_medocs'#Redirection par defaut après authentification/N'est plus necessaire si on utilise succuess_url dans l'heritage du loginView

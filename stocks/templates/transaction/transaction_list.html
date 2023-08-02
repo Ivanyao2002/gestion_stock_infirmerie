@@ -6,36 +6,30 @@
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Liste des transactions</h1>
+      <h1 class="h2">Liste des transactions<i class="bi bi-recycle ms-2"></i></h1>
     </div>
     <br>
     
     <div class="container">
       <div class="row">
         <div class="col-12 col-md-8 col-lg-10">
-          <div class="card">
+          <div class="card ms-5">
             <div class="card-header text-center">
               RECHERCHER
             </div>
             <div class="card-body">
               <form method="POST" action="" class="row g-3 align-items-center">
                 {% csrf_token %}
-                <!-- <div class="col-auto">
-                    <label for="search_nom" class="col-form-label">Nom :</label>
-                </div> -->
-                <div class="col-auto">
+
+                <div class="col-12 col-md-4">
                     <input type="text" id="search_nom" name="medicaments" class="form-control" placeholder="Nom du médicament">
                 </div>
-                <!-- <div class="col-auto">
-                    <label for="search_date" class="col-form-label">Date :</label>
-                </div> -->
-                <div class="col-auto">
+ 
+                <div class="col-12 col-md-4">
                   <input type="date" id="search_date" name="date" class="form-control">
                 </div>
-                <!-- <div class="col-auto">
-                    <label for="search_mois" class="col-form-label">Mois :</label>
-                </div> -->
-                <div class="col-auto">
+
+                <div class="col-12 col-md-4">
                     <select id="search_mois" name="mois" class="form-select">
                         <option value="">Sélectionnez un mois</option>
                         <option value="1">Janvier</option>
@@ -53,14 +47,12 @@
                         
                     </select>
                 </div>
-                <!-- <div class="col-auto">
-                    <label for="search_annee" class="col-form-label">Année :</label>
-                </div> -->
-                <div class="col-auto">
+
+                <div class="col-12 col-md-4">
                     <input type="text" id="search_annee" name="annee" class="form-control" placeholder="Année">
                 </div>
 
-                <div class="col-auto">
+                <div class="col-12 col-md-4">
                   <select id="search_categorie" name="categorie" class="form-select">
                     <option value="">Toutes les catégories</option>
                     <option value="entree">Entrée</option>
@@ -68,8 +60,8 @@
                   </select>
                 </div>
 
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                <div class="col-12 col-md-4">
+                  <button type="submit" class="btn btn-outline-primary btn-sm w-75">Rechercher<i class="bi bi-search h6 ms-3"></i></button>
                 </div>
             </form>
             </div>
@@ -125,8 +117,8 @@
   <div class="container"> 
     <div class="row">
       <div class="col-12 col-md-3 col-lg-3">
-        <a href="{% url 'stocks:exporter' %}" class="btn btn-primary">
-          <i class="bi bi-download me-2"></i>Exporter
+        <a href="{% url 'stocks:exporter' %}" class="btn btn-outline-primary">
+          <i class="bi bi-download me-2"></i>Exporter en excel
         </a>
         
       </div>

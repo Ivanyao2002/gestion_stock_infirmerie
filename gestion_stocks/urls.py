@@ -24,5 +24,5 @@ urlpatterns = [
     path('log_out/', Deconnexion.as_view(), name='deconnexion'),
     path('stocks/', include('stocks.urls')),
     path('users/', include('users.urls')),
-    path('consultation/', include('consultation.urls')),
+    path('consultations/', include('consultations.urls')),
 ]

@@ -43,6 +43,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
             return reverse_lazy('consultation:list_consultation_jour')
         return self.success_url
     
+
 class ChangerPasswordView(LoginRequiredMixin, PasswordChangeView):
     model = User
     form_class = PassWordForm

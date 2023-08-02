@@ -9,7 +9,7 @@ class Travailleurs(models.Model):
         ('CARENA','CARENA'),
         ('REGIE','REGIE'),
         ('PRESTATAIRE','PRESTATAIRE'),
-        ('REGIE','REGIE'),
+        ('AGENT DE BORD','AGENT DE BORD'),
     )
 
     liste = (
@@ -54,7 +54,6 @@ class Travailleurs(models.Model):
         ('WICS','WICS'),
     )
 
-
     nom = models.CharField(max_length=200,blank=False)#Contient le nom et les prénoms
     email = models.EmailField(max_length=200)
     atelier = models.CharField(max_length=100, choices=departement)
@@ -64,6 +63,7 @@ class Travailleurs(models.Model):
     
     class Meta:
         ordering = ["nom"]
+        verbose_name_plural  = 'Travailleurs'
 
     @classmethod
     def search_by_name(cls, nom):
@@ -85,6 +85,7 @@ class Fournisseurs(models.Model):
 
     class Meta:
         ordering = ["nom"]
+        verbose_name_plural = 'Fournisseurs'
 
     @classmethod
     def search_by_name(cls, nom):
@@ -94,37 +95,30 @@ class Fournisseurs(models.Model):
     def search_by_matricule(cls, matricule):
         return cls.objects.filter(matricule=matricule) 
 
-
     def __str__(self) :
         return self.societe
 
 class Medicaments(models.Model):
     nom_medoc = models.CharField(max_length=100)
     nom_commercial = models.CharField(max_length=100)
-    # dosage = models.CharField(max_length=100, blank=True)
-    # date_expi = models.DateField()
-    quantité_stock = models.IntegerField()
-    quantité_detail = models.IntegerField()
+    quantité_stock = models.PositiveIntegerField()
+    quantité_detail = models.PositiveIntegerField()
     unité = models.CharField(max_length=100, blank=True)
     code_medoc = models.CharField(max_length=50)
     date_creation = models.DateTimeField(auto_now_add=True)
     fournisseur = models.ForeignKey(Fournisseurs,on_delete= models.SET_NULL, null=True)
-    seuil_alerte = models.PositiveIntegerField(default=10, blank=True)
-
-
     slug = models.SlugField(blank=True)
 
     class Meta:
-        ordering = ["date_creation"]
+        ordering = ["nom_medoc"]
+        verbose_name_plural = 'Médicaments'
 
     def __str__(self) :
         return self.nom_medoc
 
     def save(self, *args, **kwargs) :
         if not self.slug:
-            self.slug = slugify(self.nom_medoc) 
-        # if self.pk:
-            # self.quantité_stock = self.quantité_detail // self.plaqte_par_boite     
+            self.slug = slugify(self.nom_medoc)   
         return super().save(*args, **kwargs)
     
     @classmethod
@@ -151,8 +145,8 @@ class Transactions(models.Model):
         (VENTE,'Sortie'),
     ]
     type_transaction = models.CharField(max_length=20, choices=choix)
-    quantite = models.IntegerField()
-    quantite_plaq = models.IntegerField()
+    quantite = models.PositiveIntegerField()
+    quantite_plaq = models.PositiveIntegerField()
     date_transaction = models.DateTimeField(auto_now_add=True)
     medicaments = models.ForeignKey(Medicaments,on_delete= models.SET_NULL, null=True)
     travailleurs = models.ForeignKey(Travailleurs,on_delete= models.SET_NULL, null=True)
@@ -161,6 +155,7 @@ class Transactions(models.Model):
    
     class Meta:
         ordering = ["date_transaction"]
+        verbose_name_plural = 'Transactions'
 
     @classmethod
     def search_by_name(cls, medicaments):
@@ -169,8 +164,6 @@ class Transactions(models.Model):
     @classmethod
     def search_by_date(cls, date):
         return cls.objects.filter(date_transaction__date=date)
-    # date_obj = datetime.strptime(date, '%Y-%m-%d').date()
-        # return cls.objects.filter(date_transaction=date_obj)
 
     @classmethod
     def search_by_month(cls, mois):

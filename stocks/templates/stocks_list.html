@@ -5,7 +5,7 @@
 
 <main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Liste des médicaments</h1>
+      <h1 class="h2">Liste des médicaments <i class="bi bi-capsule ms-1"></i><i class="bi bi-capsule"></i></h1>
   </div>
   <br>
     
@@ -14,52 +14,17 @@
       <div class="col-12 col-md-8 col-lg-8">
         <div class="card">
           <div class="card-header text-center">
-            RECHERCHER
           </div>
           <div class="card-body">
             <form method="POST" action="" class="row g-3 align-items-center">
               {% csrf_token %}
-              <!-- <div class="col-auto">
-                  <label for="search_nom" class="col-form-label">Nom :</label>
-              </div> -->
-              <div class="col-auto">
-                  <input type="text" id="search_nom" name="nom_medoc" class="form-control" placeholder="Nom du médicament">
+
+              <div class="col-9">
+                  <input type="text" id="search_nom" name="nom_medoc" class="form-control" placeholder="Entrez le nom du médicament">
               </div>
-              <!-- <div class="col-auto">
-                  <label for="search_date" class="col-form-label">Date :</label>
-              </div> -->
+
               <div class="col-auto">
-                  <input type="date" id="search_date" name="date" class="form-control">
-              </div>
-              <!-- <div class="col-auto">
-                  <label for="search_mois" class="col-form-label">Mois :</label>
-              </div> -->
-              <div class="col-auto">
-                  <select id="search_mois" name="mois" class="form-select">
-                      <option value="">Sélectionnez un mois</option>
-                      <option value="1">Janvier</option>
-                      <option value="2">Février</option>
-                      <option value="3">Mars</option>
-                      <option value="4">Avril</option>
-                      <option value="5">Mai</option>
-                      <option value="6">Juin</option>
-                      <option value="7">Juillet</option>
-                      <option value="8">Aout</option>
-                      <option value="9">Septembre</option>
-                      <option value="10">Octobre</option>
-                      <option value="11">Novembre</option>
-                      <option value="12">Décembre</option>
-                      
-                  </select>
-              </div>
-              <!-- <div class="col-auto">
-                  <label for="search_annee" class="col-form-label">Année :</label>
-              </div> -->
-              <div class="col-auto">
-                  <input type="text" id="search_annee" name="annee" class="form-control" placeholder="Année">
-              </div>
-              <div class="col-auto">
-                  <button type="submit" class="btn btn-primary">Rechercher</button>
+                  <button type="submit" class="btn btn-outline-primary btn-sm">Rechercher<i class="bi bi-search h6 ms-3"></i></button>
               </div>
           </form>
           </div>
@@ -69,7 +34,7 @@
 
       <div class="col-12 col-md-4 col-lg-4 text-end" >
         <a href="{% url 'stocks:create_medocs' %}">
-          <button type="button" class="btn btn-primary">
+          <button type="button" class="btn btn-outline-primary">
             <i class="bi bi-plus"></i>
             Ajouter
           </button>
@@ -134,8 +99,8 @@
   <div class="container">
     <div class="row">
       <div class="col-12 col-md-3 col-lg-3">
-        <a href="{% url 'stocks:export' %}" class="btn btn-primary">
-          <i class="bi bi-download me-2"></i>Télécharger la liste en Excel
+        <a href="{% url 'stocks:export' %}" class="btn btn-outline-primary">
+          <i class="bi bi-download me-2"></i>Exporter en Excel
         </a>
         
       </div>

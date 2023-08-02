@@ -4,7 +4,7 @@
 {% block body %}
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Supprimer ce travailleur</h1>
+      <h1 class="h2">Supprimer ce travailleur<i class="bi bi-person-dash-fill ms-2"></i></h1>
     </div>
     <br><br>
 
@@ -16,12 +16,12 @@
                     <p class="text-center lead">Voulez-vous supprimer cet élément ? ({{travailleurs}}) </p>
                 </div>
                 <div class="card-footer">
-                    <div class="row">
+                    <div class="row text-center">
                         <div class="col-12 col-md-6">
-                            <a href="{% url 'stocks:list_worker' %}" class="w-100 btn btn-lg btn-outline-primary">Annuler</a>
+                            <a href="{% url 'stocks:list_worker' %}" class="w-50 btn btn-md btn-outline-primary"><i class="bi bi-arrow-left me-2"></i>Retour</a>
                         </div>
                         <div class="col-12 col-md-6">
-                            <button class="w-100 btn btn-lg btn-outline-danger" type="submit">Supprimer</button>
+                            <button class="w-50 btn btn-md btn-outline-danger" type="submit">Supprimer<i class="bi bi-trash3 ms-2"></i></button>
                         </div>
                     </div>
                 </div>

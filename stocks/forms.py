@@ -9,7 +9,7 @@ class MedicamentsForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"nom_medoc",
             'placeholder':"Paracétamol",
         })
 
@@ -17,7 +17,7 @@ class MedicamentsForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"nom_commercial",
             'placeholder':"Paracétamol",
         })
 
@@ -25,7 +25,7 @@ class MedicamentsForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"quantité_stock",
             'placeholder':"10",
         })
 
@@ -33,39 +33,24 @@ class MedicamentsForm(forms.ModelForm):
             'type':"text",
             'class':"form-select",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
-            'placeholder':"",
+            'id':"fournisseur",
+            'placeholder':"fournisseur",
         })
-
-        # self.fields['dosage'].widget.attrs.update({
-        #     'type':"text",
-        #     'class':"form-control ",
-        #     'style':"color: #DC143C;",
-        #     'id':"floatingInput",
-        #     'placeholder':"2 fois par jours",
-        # })
 
         self.fields['quantité_detail'].widget.attrs.update({
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"quantité_detail",
             'placeholder':"10",
         })
 
-        # self.fields['date_expi'].widget.attrs.update({
-        #     'type':"date",
-        #     'class':"form-select ",
-        #     'style':"color: #DC143C;",
-        #     'id':"floatingInput",
-        #     'placeholder':"",
-        # })
 
         self.fields['code_medoc'].widget.attrs.update({
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"code_medoc",
             'placeholder':"10",
         })
 
@@ -73,7 +58,7 @@ class MedicamentsForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"unité",
             'placeholder':"10",
         })
 
@@ -94,32 +79,23 @@ class TransactionForm(forms.ModelForm):
             'type':"text",
             'class':"form-select ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
-            'placeholder':"",
+            'id':"medicaments",
+            'placeholder':"medicaments",
         })
 
         self.fields['type_transaction'].widget.attrs.update({
             'type':"text",
             'class':"form-select ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
-            'placeholder':"",
+            'id':"type_transaction",
+            'placeholder':"type",
         })
-
-        # self.fields['date_transaction'].widget.attrs.update({
-        #     'type':"date",
-        #     'class':"form-select ",
-        #     'style':"color: #DC143C;",
-        #     'id':"floatingInput",
-        #     'placeholder':"",
-            
-        # })
 
         self.fields['quantite'].widget.attrs.update({
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"quantite",
             'placeholder':"10",
         })
 
@@ -127,15 +103,15 @@ class TransactionForm(forms.ModelForm):
             'type':"text",
             'class':"form-select",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
-            'placeholder':"10",
+            'id':"travailleurs",
+            'placeholder':"travailleur",
         })
 
         self.fields['quantité_detail'].widget.attrs.update({
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"quantité_detail",
             'placeholder':"10",
         })
 
@@ -143,11 +119,9 @@ class TransactionForm(forms.ModelForm):
             'type':"text",
             'class':"form-select",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
-            'placeholder':"",
+            'id':"fournisseur",
+            'placeholder':"fournisseur",
         })
-
-
 
     class Meta:
         model = Transactions
@@ -161,7 +135,7 @@ class TravailleursForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"nom",
             'placeholder':"Paracétamol",
         })
 
@@ -169,7 +143,7 @@ class TravailleursForm(forms.ModelForm):
             'type':"text",
             'class':"form-select ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"societe_regie",
             'placeholder':"",
         })
 
@@ -177,7 +151,7 @@ class TravailleursForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"email",
             'placeholder':"Paracétamol",
         })
 
@@ -185,7 +159,7 @@ class TravailleursForm(forms.ModelForm):
             'type':"text",
             'class':"form-select ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"atelier",
             'placeholder':"Paracétamol",
         })
 
@@ -193,7 +167,7 @@ class TravailleursForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"matricule",
             'placeholder':"Paracétamol",
         })
 
@@ -201,18 +175,13 @@ class TravailleursForm(forms.ModelForm):
             'type':"text",
             'class':"form-select ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"societe",
             'placeholder':"",
         })        
 
     class Meta:
         model = Travailleurs
         exclude = ("slug",)
-
-        # widgets = {
-        #     'date_expi': forms.SelectDateWidget(years=range(2023,2050)),
-
-        # }
 
 
 class FournisseursForm(forms.ModelForm):
@@ -222,7 +191,7 @@ class FournisseursForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"nom",
             'placeholder':"Paracétamol",
         })
 
@@ -230,7 +199,7 @@ class FournisseursForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"prenoms",
             'placeholder':"Paracétamol",
         })
 
@@ -238,7 +207,7 @@ class FournisseursForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"matricule",
             'placeholder':"Paracétamol",
         })
 
@@ -246,7 +215,7 @@ class FournisseursForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"societe",
             'placeholder':"Paracétamol",
         })
 
@@ -254,24 +223,10 @@ class FournisseursForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"floatingInput",
+            'id':"email",
             'placeholder':"Paracétamol",
         })
-
-        # self.fields['unité'].widget.attrs.update({
-        #     'type':"text",
-        #     'class':"form-control ",
-        #     'style':"color: #DC143C;",
-        #     'id':"floatingInput",
-        #     'placeholder':"10",
-        # })
 
     class Meta:
         model = Fournisseurs
         exclude = ("slug",)
-
-        # widgets = {
-        #     'date_expi': forms.SelectDateWidget(years=range(2023,2050)),
-
-        # }
-      

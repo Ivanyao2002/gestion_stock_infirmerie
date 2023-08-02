@@ -10,14 +10,14 @@ class ConnexionForm(AuthenticationForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: black;",
-            'id':"floatingInput",
+            'id':"username",
             'placeholder':"Login",
         })
         self.fields['password'].widget.attrs.update({
             'type':"Password",
             'class':"form-control ",
             'style':"color: black;",
-            'id':"floatingPassword",
+            'id':"password",
             'placeholder':"Password",
         })
 
@@ -29,14 +29,14 @@ class ChangeForm(UserChangeForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: black;",
-            'id':"floatingInput",
+            'id':"username",
             'placeholder':"Login",
         })
         self.fields['email'].widget.attrs.update({
             'type':"email",
             'class':"form-control ",
             'style':"color: black;",
-            'id':"floatingInput",
+            'id':"email",
             'placeholder':"Email",
         })
     class Meta:
@@ -51,21 +51,21 @@ class PassWordForm(PasswordChangeForm):
             'type':"Password",
             'class':"form-control ",
             'style':"color: black;",
-            'id':"floatingInput",
+            'id':"old_password",
             'placeholder':"password",
         })
         self.fields['new_password1'].widget.attrs.update({
             'type':"Password",
             'class':"form-control ",
             'style':"color: black;",
-            'id':"floatingPassword",
+            'id':"new_password1",
             'placeholder':"Password",
         })
         self.fields['new_password2'].widget.attrs.update({
             'type':"Password",
             'class':"form-control ",
             'style':"color: black;",
-            'id':"floatingPassword",
+            'id':"new_password2",
             'placeholder':"Password",
         })
 
