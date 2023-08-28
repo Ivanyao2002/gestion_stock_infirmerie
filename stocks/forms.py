@@ -22,7 +22,7 @@ class MedicamentsForm(forms.ModelForm):
         })
 
         self.fields['quantité_stock'].widget.attrs.update({
-            'type':"text",
+            'type':"number",
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"quantité_stock",
@@ -38,13 +38,12 @@ class MedicamentsForm(forms.ModelForm):
         })
 
         self.fields['quantité_detail'].widget.attrs.update({
-            'type':"text",
+            'type':"number",
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"quantité_detail",
             'placeholder':"10",
         })
-
 
         self.fields['code_medoc'].widget.attrs.update({
             'type':"text",
@@ -62,13 +61,29 @@ class MedicamentsForm(forms.ModelForm):
             'placeholder':"10",
         })
 
+        self.fields['expiration'].widget.attrs.update({
+            'type':"date",
+            'class':"form-control ",
+            'style':"color: #DC143C;",
+            'id':"expiration",
+            'placeholder':"date d'expiration",
+        })
+
+        self.fields['plaquette_par_boite'].widget.attrs.update({
+            'type':"number",
+            'class':"form-control ",
+            'style':"color: #DC143C;",
+            'id':"plaquette_par_boite",
+            'placeholder':"plaquette par boite",
+        })        
+        
+
     class Meta:
         model = Medicaments
         exclude = ("slug",)
 
         widgets = {
             'date_expi': forms.SelectDateWidget(years=range(2023,2050)),
-
         }
 
 
@@ -92,7 +107,7 @@ class TransactionForm(forms.ModelForm):
         })
 
         self.fields['quantite'].widget.attrs.update({
-            'type':"text",
+            'type':"number",
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"quantite",
@@ -108,7 +123,7 @@ class TransactionForm(forms.ModelForm):
         })
 
         self.fields['quantité_detail'].widget.attrs.update({
-            'type':"text",
+            'type':"number",
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"quantité_detail",
@@ -127,7 +142,6 @@ class TransactionForm(forms.ModelForm):
         model = Transactions
         exclude = ("slug",)
         
-
 class TravailleursForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -136,7 +150,10 @@ class TravailleursForm(forms.ModelForm):
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"nom",
-            'placeholder':"Paracétamol",
+            'placeholder':"Nom et Prenoms",
+            'pattern':"[A-Za-z\s]*",
+            'name':"nom",
+            'oninput':"filterNumericChars()", 
         })
 
         self.fields['societe_regie'].widget.attrs.update({
@@ -144,7 +161,7 @@ class TravailleursForm(forms.ModelForm):
             'class':"form-select ",
             'style':"color: #DC143C;",
             'id':"societe_regie",
-            'placeholder':"",
+            'placeholder':"societe_regie",
         })
 
         self.fields['email'].widget.attrs.update({
@@ -152,7 +169,9 @@ class TravailleursForm(forms.ModelForm):
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"email",
-            'placeholder':"Paracétamol",
+            'placeholder':"email",
+            'name':"email",
+            'oninput':"validateEmail()", 
         })
 
         self.fields['atelier'].widget.attrs.update({
@@ -160,7 +179,7 @@ class TravailleursForm(forms.ModelForm):
             'class':"form-select ",
             'style':"color: #DC143C;",
             'id':"atelier",
-            'placeholder':"Paracétamol",
+            'placeholder':"atelier",
         })
 
         self.fields['matricule'].widget.attrs.update({
@@ -168,7 +187,10 @@ class TravailleursForm(forms.ModelForm):
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"matricule",
-            'placeholder':"Paracétamol",
+            'placeholder':"matricule",
+            'name':"matricule",
+            'oninput':"filterNonNumericChars()", 
+            'pattern':"[0-9]*",
         })
 
         self.fields['societe'].widget.attrs.update({
@@ -176,8 +198,15 @@ class TravailleursForm(forms.ModelForm):
             'class':"form-select ",
             'style':"color: #DC143C;",
             'id':"societe",
-            'placeholder':"",
+            'placeholder':"societe",
         })        
+
+     #####VALIDATION, AFFICHAGE D ERREUR 
+        self.fields['matricule'].error_messages = {
+            'unique': "Ce matricule existe déjà. Veuillez en choisir un autre, chaque matricule est unique.",
+            'required': "Le champ 'Matricule' est obligatoire.",
+        }
+ 
 
     class Meta:
         model = Travailleurs
@@ -192,7 +221,10 @@ class FournisseursForm(forms.ModelForm):
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"nom",
-            'placeholder':"Paracétamol",
+            'placeholder':"nom",
+            'pattern':"[A-Za-z]*",
+            'name':"nom",
+            'oninput':"filtreNumericChars()",
         })
 
         self.fields['prenoms'].widget.attrs.update({
@@ -200,7 +232,10 @@ class FournisseursForm(forms.ModelForm):
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"prenoms",
-            'placeholder':"Paracétamol",
+            'placeholder':"penoms",
+            'pattern':"[A-Za-z\s]*",
+            'name':"nom",
+            'oninput':"filterNumericChars()",
         })
 
         self.fields['matricule'].widget.attrs.update({
@@ -208,7 +243,10 @@ class FournisseursForm(forms.ModelForm):
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"matricule",
-            'placeholder':"Paracétamol",
+            'placeholder':"matricule",
+            'name':"matricule",
+            'oninput':"filterNonNumericChars()", 
+            'pattern':"[0-9]*",
         })
 
         self.fields['societe'].widget.attrs.update({
@@ -216,7 +254,7 @@ class FournisseursForm(forms.ModelForm):
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"societe",
-            'placeholder':"Paracétamol",
+            'placeholder':"societe",
         })
 
         self.fields['email'].widget.attrs.update({
@@ -224,9 +262,17 @@ class FournisseursForm(forms.ModelForm):
             'class':"form-control ",
             'style':"color: #DC143C;",
             'id':"email",
-            'placeholder':"Paracétamol",
+            'placeholder':"email",
+            'name':"email",
+            'oninput':"validateEmail()", 
         })
 
+     #####VALIDATION, AFFICHAGE D ERREUR 
+        self.fields['matricule'].error_messages = {
+            'unique': "Ce matricule existe déjà. Veuillez en choisir un autre, chaque matricule est unique.",
+            'required': "Le champ 'Matricule' est obligatoire.",
+        }
+ 
     class Meta:
         model = Fournisseurs
         exclude = ("slug",)

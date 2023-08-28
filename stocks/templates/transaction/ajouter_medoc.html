@@ -33,7 +33,7 @@
                   <select class="form-select" id="fournisseur" name="fournisseur" required>
                     <option value="">Sélectionner un fournisseur</option>
                     {% for fournisseur in fournisseurs %}
-                    <option value="{{ fournisseur.id }}" data-matricule="{{ fournisseur.matricule }}"><span><<</span>{{ fournisseur.matricule }}<span>>></span>{{ fournisseur.nom }}</option>
+                    <option value="{{ fournisseur.id }}">{{ fournisseur.societe }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -72,7 +72,7 @@
 
     // Ajouter une fonction de recherche basée sur le matricule du fournisseur
     $('#fournisseur').on('select2:open', function() {
-    $('.select2-search__field').attr('placeholder', 'Rechercher par nom ou matricule');
+    $('.select2-search__field').attr('placeholder', 'Rechercher par nom de société');
     });
   });
 </script>

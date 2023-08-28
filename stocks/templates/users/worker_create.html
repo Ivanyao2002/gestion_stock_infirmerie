@@ -16,17 +16,33 @@
         <div class="card mb-5">
             <div class="card-body mb-3">
               <main class="form-signin">
+                <div id="form-errors">
+                  {% if form.errors %}
+                    <div class="alert alert-danger">
+                      <ul>
+                        {% for field in form %}
+                          {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                          {% endfor %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                </div>
+
                 <div class="row">
                   <div class="col-12 col-md-6">
                     <div class="form-floating mt-2 text-info">
                       {{ form.matricule}}
                       <label for="matricule" class="text-primary">Matricule</label>  
                     </div>
+                    <span id="matricule-error" style="color: red;"></span>
                   </div>
                   <div class="col-12 col-md-6">
                     <div class="form-floating mt-2 text-info">
                       {{ form.nom}}
                       <label for="nom" class="text-primary">Nom et Prénoms</label>  
+                      <span id="nom-error" style="color: red;"></span>
                     </div>
                   </div>
                 </div>
@@ -37,6 +53,7 @@
                       {{ form.email}}
                       <label for="email" class="text-primary">Email</label>
                     </div>
+                    <span id="email-error" style="color: red;"></span>
                   </div>
                   <div class="col-12 col-md-6">
                     <div class="form-floating mt-3">
@@ -99,6 +116,7 @@
               url: $(this).attr('action'),
               data: $(this).serialize(),
               success: function(response) {
+                if (response.success){
                   // Afficher la pop-up de succès
                   $('#success-popup').dialog({
                       modal: true,
@@ -114,7 +132,17 @@
               $('#ok-button').on('click', function() {
                     window.location.href = "{% url 'stocks:list_worker' %}";  // Rediriger vers la liste des travailleurs
                 });
-             
+              }else{
+                  // Convertir l'objet JSON en chaîne JSON lisible
+                  var errorsString = JSON.stringify(response.errors, null, 2);
+                  // Afficher les erreurs dans le template
+                  $('#form-errors').html('<div class="alert alert-danger">' + errorsString + '</div>');
+                      // Gérer les interactions avec les champs
+                      $('.form-control').on('input change', function() {
+                      // Cacher les erreurs lorsque l'utilisateur commence à saisir
+                        $('#form-errors').hide();
+                    });
+              }
               },
               error: function(error) {
                   // Gérer les erreurs de requête
@@ -125,4 +153,62 @@
   });
 </script>
 
+<script>
+  function filterNumericChars() {
+    var nomInput = document.getElementById('nom');
+    var nomValue = nomInput.value;
+
+    // Supprime les caractères non alphabétiques en utilisant une expression régulière
+    var alphabeticValue = nomValue.replace(/[^A-Za-z\s]/g, '');
+    // Mettre à jour la valeur du champ avec les caractères filtrés
+    nomInput.value = alphabeticValue;
+    // Vérifie s'il y a des caractères non alphabétiques à l'aide d'une expression régulière
+    var containsNonAlphabeticChars = /[^A-Za-z\s]/.test(nomValue);
+    // Affiche un message d'erreur si des caractères non alphabétiques sont présents
+    var errorMessageElement = document.getElementById('nom-error');
+    if (containsNonAlphabeticChars) {
+        errorMessageElement.textContent = 'Le nom et prenoms ne peut contenir que des lettres et des espaces.';
+    } else {
+        errorMessageElement.textContent = '';
+      }
+  }
+</script>
+<script>
+  function filterNonNumericChars() {
+      var matriculeInput = document.getElementById('matricule');
+      var matriculeValue = matriculeInput.value;
+
+      // Supprime les caractères non numériques en utilisant une expression régulière
+      var numericValue = matriculeValue.replace(/\D/g, '');
+
+      // Mettre à jour la valeur du champ avec les caractères filtrés
+      matriculeInput.value = numericValue;
+      // Vérifie s'il y a des caractères non numériques à l'aide d'une expression régulière
+      var containsNonNumericChars = /\D/.test(matriculeValue);
+      // Affiche un message d'erreur si des caractères non numériques sont présents
+      var errorMessageElement = document.getElementById('matricule-error');
+        if (containsNonNumericChars) {
+            errorMessageElement.textContent = 'Le matricule ne peut contenir que des chiffres.';
+        } else {
+            errorMessageElement.textContent = '';
+        }
+}
+
+function validateEmail() {
+        var inputElement = document.getElementById('email');
+        var emailValue = inputElement.value;
+
+        // Vérifie le format de l'adresse email en utilisant une expression régulière
+        var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        var isEmailValid = emailPattern.test(emailValue);
+
+        // Affiche un message d'erreur si l'adresse email est invalide
+        var errorMessageElement = document.getElementById('email-error');
+        if (!isEmailValid) {
+            errorMessageElement.textContent = 'Veuillez saisir une adresse email valide.';
+        } else {
+            errorMessageElement.textContent = '';
+        }
+    }
+</script>
 {% endblock %}

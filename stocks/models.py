@@ -54,10 +54,10 @@ class Travailleurs(models.Model):
         ('WICS','WICS'),
     )
 
-    nom = models.CharField(max_length=200,blank=False)#Contient le nom et les prénoms
-    email = models.EmailField(max_length=200)
+    nom = models.CharField(max_length=200)#Contient le nom et les prénoms
+    email = models.EmailField(max_length=200, blank=True)
     atelier = models.CharField(max_length=100, choices=departement)
-    matricule = models.CharField(unique=True, max_length=50,blank=False)
+    matricule = models.CharField(unique=True, max_length=50)
     societe = models.CharField(max_length=20, choices=choix)
     societe_regie = models.CharField(max_length=20, choices=liste, blank=True)
     
@@ -77,10 +77,10 @@ class Travailleurs(models.Model):
         return f"{self.matricule} - {self.nom}"
     
 class Fournisseurs(models.Model):
-    nom = models.CharField(max_length=30,blank=False)
-    prenoms = models.CharField(max_length=100,blank=False)
-    email = models.EmailField(max_length=200)
-    societe = models.CharField(max_length=100,blank=False)
+    nom = models.CharField(max_length=30)
+    prenoms = models.CharField(max_length=100)
+    email = models.EmailField(max_length=200, blank=True)
+    societe = models.CharField(max_length=100)
     matricule = models.CharField(unique=True, max_length=100,blank=False)
 
     class Meta:
@@ -100,13 +100,15 @@ class Fournisseurs(models.Model):
 
 class Medicaments(models.Model):
     nom_medoc = models.CharField(max_length=100)
-    nom_commercial = models.CharField(max_length=100)
-    quantité_stock = models.PositiveIntegerField()
-    quantité_detail = models.PositiveIntegerField()
+    nom_commercial = models.CharField(max_length=100, blank=True)
+    quantité_stock = models.PositiveBigIntegerField()
+    quantité_detail = models.PositiveBigIntegerField()
     unité = models.CharField(max_length=100, blank=True)
     code_medoc = models.CharField(max_length=50)
     date_creation = models.DateTimeField(auto_now_add=True)
-    fournisseur = models.ForeignKey(Fournisseurs,on_delete= models.SET_NULL, null=True)
+    fournisseur = models.ForeignKey(Fournisseurs,on_delete= models.SET_NULL, null=True, blank=True)
+    expiration = models.DateField()
+    plaquette_par_boite = models.PositiveBigIntegerField()
     slug = models.SlugField(blank=True)
 
     class Meta:
@@ -145,12 +147,12 @@ class Transactions(models.Model):
         (VENTE,'Sortie'),
     ]
     type_transaction = models.CharField(max_length=20, choices=choix)
-    quantite = models.PositiveIntegerField()
-    quantite_plaq = models.PositiveIntegerField()
+    quantite = models.PositiveBigIntegerField()
+    quantite_plaq = models.PositiveBigIntegerField()
     date_transaction = models.DateTimeField(auto_now_add=True)
     medicaments = models.ForeignKey(Medicaments,on_delete= models.SET_NULL, null=True)
     travailleurs = models.ForeignKey(Travailleurs,on_delete= models.SET_NULL, null=True)
-    fournisseur = models.ForeignKey(Fournisseurs,on_delete= models.SET_NULL, null=True)
+    fournisseur = models.ForeignKey(Fournisseurs,on_delete= models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
    
     class Meta:

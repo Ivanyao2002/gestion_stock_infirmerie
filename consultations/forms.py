@@ -69,6 +69,9 @@ class PeriodicConsultationForm(forms.ModelForm):
             'style':"color: #DC143C;",
             'id':"matricule",
             'placeholder':"matricule",
+            'name':"matricule",
+            'oninput':"filterNonNumericChars()", 
+            'pattern':"[0-9]*",
         })
 
         self.fields['nom_prenoms'].widget.attrs.update({
@@ -92,6 +95,14 @@ class PeriodicConsultationForm(forms.ModelForm):
             'id':"atelier",
             'placeholder':"atelier",
             # 'disabled':True,
+        })
+
+        self.fields['prescription'].widget.attrs.update({
+            'type':"text",
+            'class':"form-control",
+            'style':"color: #DC143C;",
+            'id':"prescription",
+            'placeholder':"prescription",
         })
 
     #####VALIDATION, AFFICHAGE D ERREUR 
@@ -232,8 +243,11 @@ class DayConsultationForm(forms.ModelForm):
             'type':"text",
             'class':"form-control ",
             'style':"color: #DC143C;",
-            'id':"matricule",
+            'id':"matricule",  
             'placeholder':"matricule",
+            'name':"matricule",
+            'oninput':"filterNonNumericChars()", 
+            'pattern':"[0-9]*",
         })
 
         self.fields['nom_prenoms'].widget.attrs.update({
@@ -257,7 +271,15 @@ class DayConsultationForm(forms.ModelForm):
             'id':"atelier",
             'placeholder':"atelier",
         })
- 
+
+        self.fields['prescription'].widget.attrs.update({
+            'type':"text",
+            'class':"form-control",
+            'style':"color: #DC143C;",
+            'id':"prescription",
+            'placeholder':"prescription",
+        }) 
+
      #####VALIDATION, AFFICHAGE D ERREUR 
         self.fields['matricule'].error_messages = {
             'unique': "Ce matricule existe déjà. Veuillez en choisir un autre, chaque matricule est unique.",
@@ -304,8 +326,17 @@ class CongeForm(forms.ModelForm):
             'placeholder':"evacuation",
         })
 
+        self.fields['prescription'].widget.attrs.update({
+            'type':"text",
+            'class':"form-control",
+            'style':"color: #DC143C;",
+            'id':"prescription",
+            'placeholder':"prescription",
+        }) 
+
+
     class Meta:
         model = Day_Consultation
-        fields = ("break_day","evacuation")
+        fields = ("break_day","evacuation","prescription")
 
 

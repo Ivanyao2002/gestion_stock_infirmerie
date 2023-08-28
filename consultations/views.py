@@ -43,6 +43,8 @@ class DayConsultationCreateView(LoginRequiredMixin, CreateView):
         return JsonResponse({'errors': form.errors})
     
     def form_valid(self, form):
+        # Attribuer l'utilisateur connecté au champ de l'utilisateur dans le formulaire
+        form.instance.user = self.request.user
         # Enregistrer le formulaire si valide
         self.object = form.save()
         # Renvoyer une réponse JSON avec succès
@@ -59,8 +61,9 @@ class PeriodicConsultationCreateView(LoginRequiredMixin, CreateView):
         return JsonResponse({'errors': form.errors})
     
     def form_valid(self, form):
+        form.instance.user = self.request.user
         # Enregistrer le formulaire si valide
-        self.object = form.save()
+        self.object = form.save(request= self.request)
         # Renvoyer une réponse JSON avec succès
         return JsonResponse({'success': True})
     
@@ -117,7 +120,7 @@ class DayConsultationListView(LoginRequiredMixin, ListView):
 class PeriodicConsultationListView(LoginRequiredMixin, ListView):
     model = Periodic_Consultation
     template_name = "vma_list.html"
-    context_object_name = "vma"
+    context_object_name = "vma" 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

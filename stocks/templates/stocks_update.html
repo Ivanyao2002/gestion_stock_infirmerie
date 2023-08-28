@@ -62,10 +62,24 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-12 col-md-6 col-lg-6">
+                  <div class="col-12 col-md-4 col-lg-4">
                     <div class="form-floating mt-2">
                       {{ form.quantité_detail}}
                       <label for="quantité_detail" class="text-primary">Quantité Plaquettes</label>  
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-4 col-lg-4">
+                    <div class="form-floating mt-2">
+                      {{ form.plaquette_par_boite}}
+                      <label for="plaquette_par_boite" class="text-primary">Plaquettes par boite</label>  
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-4 col-lg-4">
+                    <div class="form-floating mt-2">
+                      {{ form.expiration}}
+                      <label for="expiration" class="text-primary">Date d'expiration</label>  
                     </div>
                   </div>
                 </div>
@@ -130,6 +144,22 @@
                   alert('Une erreur s\'est produite lors de la modification du medicament.')
               }
           });
+      });
+  });
+</script>
+
+<!-- Initialisation du datepicker dans un bloc de script -->
+<script>
+  $(document).ready(function() {
+      // Initialisation du datepicker avec des options de style
+      $("#expiration").datepicker({
+          dateFormat: "yy-mm-dd",  // Format de la date
+          showButtonPanel: true,   // Afficher le bouton "Aujourd'hui" et "Effacer"
+          changeMonth: true,       // Permettre la sélection du mois
+          changeYear: true,        // Permettre la sélection de l'année
+          yearRange: "2023:2070", // Plage d'années
+          showOtherMonths: true,   // Afficher les jours des mois précédents et suivants
+          selectOtherMonths: true, // Autoriser la sélection de jours des mois précédents et suivants
       });
   });
 </script>

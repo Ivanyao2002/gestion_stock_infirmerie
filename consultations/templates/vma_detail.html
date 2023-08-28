@@ -52,6 +52,9 @@
             <div class="col-12 col-md-6 col-lg-6">
                 <p><strong>Observation :</strong>{% if details.observations %} {{ details.observations }} {% else %} Aucun {% endif %}</p>
             </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <p><strong>Traitements :</strong>{% if details.prescription %} {{ details.prescription }} {% else %} Aucun {% endif %} </p>
+            </div>
         </div>
 
         <div class="row mt-3">

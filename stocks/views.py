@@ -3,7 +3,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from openpyxl import Workbook
 from django.utils import formats
 from django.contrib import messages
@@ -84,6 +84,15 @@ class CreateMedocView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         return self.request.user.groups.filter(name='Admins').exists()
 
+    def form_invalid(self, form):
+        # Renvoie les erreurs de validation sous forme de réponse JSON
+        return JsonResponse({'errors': form.errors})
+    
+    def form_valid(self, form):
+        # Enregistrer le formulaire si valide
+        self.object = form.save()
+        # Renvoyer une réponse JSON avec succès
+        return JsonResponse({'success': True}) 
 
 class UpdateMedocView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Medicaments
@@ -93,16 +102,6 @@ class UpdateMedocView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return self.request.user.groups.filter(name='Admins').exists()    
-
-
-class DeleteMedocView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Medicaments
-    template_name = "stocks_delete.html"
-    success_url = reverse_lazy('stocks:list_medocs')
-    context_object_name = "medoc"
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admins').exists()
 
 
 class TransactionView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -281,9 +280,11 @@ def achat(request, slug):
             fournisseur = Fournisseurs.objects.get(id=fournisseur_id)
                 
             medicament.quantité_stock += quantite
-            medicament.quantité_detail += qtite_plaq
+            medicament.quantité_detail += qtite_plaq    
+            medicament.quantité_stock += qtite_plaq // medicament.plaquette_par_boite
+            medicament.quantité_detail += quantite * medicament.plaquette_par_boite
             medicament.save()
-        
+         
             transaction = Transactions(medicaments=medicament,type_transaction=Transactions.ACHAT, quantite=quantite, quantite_plaq=qtite_plaq, fournisseur=fournisseur, user=request.user)
             transaction.save(request=request)
         
@@ -480,6 +481,15 @@ class CreateWorkerView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         return self.request.user.groups.filter(name='Admins').exists()
 
+    def form_invalid(self, form):
+        # Renvoie les erreurs de validation sous forme de réponse JSON
+        return JsonResponse({'errors': form.errors})
+    
+    def form_valid(self, form):
+        # Enregistrer le formulaire si valide
+        self.object = form.save()
+        # Renvoyer une réponse JSON avec succès
+        return JsonResponse({'success': True}) 
 
 class CreateFournView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Fournisseurs
@@ -490,23 +500,16 @@ class CreateFournView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         return self.request.user.groups.filter(name='Admins').exists()
 
-class DeleteWorker(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Travailleurs
-    template_name = "users/worker_delete.html"
-    context_object_name = "travailleurs"
-    success_url = reverse_lazy('stocks:list_worker')
+    def form_invalid(self, form):
+        # Renvoie les erreurs de validation sous forme de réponse JSON
+        return JsonResponse({'errors': form.errors})
+    
+    def form_valid(self, form):
+        # Enregistrer le formulaire si valide
+        self.object = form.save()
+        # Renvoyer une réponse JSON avec succès
+        return JsonResponse({'success': True}) 
 
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admins').exists()
-
-class DeleteFournisseur(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Fournisseurs
-    template_name = "users/fournisseur_delete.html"
-    context_object_name = "fournisseurs"
-    success_url = reverse_lazy('stocks:list_fournisseur')
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admins').exists()
 
 @user_passes_test(lambda user: user.groups.filter(name='Admins').exists())
 @login_required
@@ -706,3 +709,4 @@ def statistiques_global(request):
         'years': generate_years(),
         'total_sorties_plaq': total_sorties_plaq
     })
+ 

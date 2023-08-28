@@ -19,14 +19,15 @@
               <div class="col-12">
                 <div class="form-floating mt-4 text-info">
                   {{ form.username}}
-                  <label for="code_medoc" class="text-primary">Nom d'utilisateur</label>  
+                  <label for="username" class="text-primary">Nom d'utilisateur</label>  
                 </div>
               </div>
               <div class="col-12">
                 <div class="form-floating mt-4 text-info">
                   {{ form.email}}
-                  <label for="code_medoc" class="text-primary">Email</label>  
+                  <label for="email" class="text-primary">Email</label>  
                 </div>
+                <span id="email-error" style="color: red;"></span>
               </div>
               <div class="col-12 mt-4 text-center text-primary">
                 <p class="text-lead">
@@ -56,5 +57,24 @@
     </form>
   </div>
 </main>
+
+<script>
+function validateEmail() {
+        var inputElement = document.getElementById('email');
+        var emailValue = inputElement.value;
+
+        // Vérifie le format de l'adresse email en utilisant une expression régulière
+        var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        var isEmailValid = emailPattern.test(emailValue);
+
+        // Affiche un message d'erreur si l'adresse email est invalide
+        var errorMessageElement = document.getElementById('email-error');
+        if (!isEmailValid) {
+            errorMessageElement.textContent = 'Veuillez saisir une adresse email valide.';
+        } else {
+            errorMessageElement.textContent = '';
+        }
+    }
+</script>
 
 {% endblock %}

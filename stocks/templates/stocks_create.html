@@ -16,6 +16,20 @@
         <div class="card">
             <div class="card-body">
               <main class="form-signin">
+                <div id="form-errors">
+                  {% if form.errors %}
+                    <div class="alert alert-danger">
+                      <ul>
+                        {% for field in form %}
+                          {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                          {% endfor %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                </div>
+
                 <div class="row">
                   <div class="col-12 col-md-6 col-lg-6">
                     <div class="form-floating mt-2 text-info">
@@ -62,10 +76,24 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-12 col-md-6 col-lg-6">
+                    <div class="col-12 col-md-4 col-lg-4">
                       <div class="form-floating mt-2">
                         {{ form.quantité_detail}}
                         <label for="quantité_detail" class="text-primary">Quantité Plaquettes</label>  
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 col-lg-4">
+                      <div class="form-floating mt-2">
+                        {{ form.plaquette_par_boite}}
+                        <label for="plaquette_par_boite" class="text-primary">Plaquettes par boite</label>  
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 col-lg-4">
+                      <div class="form-floating mt-2">
+                        {{ form.expiration}}
+                        <label for="expiration" class="text-primary">Date d'expiration</label>  
                       </div>
                     </div>
                   </div>
@@ -108,6 +136,7 @@
               url: $(this).attr('action'),
               data: $(this).serialize(),
               success: function(response) {
+                if (response.success){
                   // Afficher la pop-up de succès
                   $('#success-popup').dialog({
                       modal: true,
@@ -127,7 +156,17 @@
               // setTimeout(function() {
               //     $('#success-popup').dialog('close');
               //       }, 8000)
-                
+            }else{
+                  // Convertir l'objet JSON en chaîne JSON lisible
+                  var errorsString = JSON.stringify(response.errors, null, 2);
+                  // Afficher les erreurs dans le template
+                  $('#form-errors').html('<div class="alert alert-danger">' + errorsString + '</div>');
+                      // Gérer les interactions avec les champs
+                      $('.form-control').on('input change', function() {
+                      // Cacher les erreurs lorsque l'utilisateur commence à saisir
+                        $('#form-errors').hide();
+                    });
+              }  
               },
               error: function(error) {
                   // Gérer les erreurs de requête
@@ -138,4 +177,19 @@
   });
 </script>
 
+<!-- Initialisation du datepicker dans un bloc de script -->
+<script>
+  $(document).ready(function() {
+      // Initialisation du datepicker avec des options de style
+      $("#expiration").datepicker({
+          dateFormat: "yy-mm-dd",  // Format de la date
+          showButtonPanel: true,   // Afficher le bouton "Aujourd'hui" et "Effacer"
+          changeMonth: true,       // Permettre la sélection du mois
+          changeYear: true,        // Permettre la sélection de l'année
+          yearRange: "2023:2070", // Plage d'années
+          showOtherMonths: true,   // Afficher les jours des mois précédents et suivants
+          selectOtherMonths: true, // Autoriser la sélection de jours des mois précédents et suivants
+      });
+  });
+</script>
 {% endblock %}

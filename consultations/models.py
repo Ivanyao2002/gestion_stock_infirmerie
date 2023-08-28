@@ -2,6 +2,7 @@ from django.db import models
 from multiselectfield import MultiSelectField
 
 from stocks.models import Travailleurs
+from users.models import User
 
 # Create your models here.
 class Periodic_Consultation(models.Model):
@@ -30,6 +31,7 @@ class Periodic_Consultation(models.Model):
 
     examens = (
         ('Audiometrie','Audiometrie'),
+        ('ECG','ECG'),
         ('Examen ophtalmologique','Examen ophtalmologique'),
         ('NFS, glycenie, proteinurie, glucosurie','NFS, glycénie, protéinurie, glucosurie'),
         ('Numeration formule sanguine','Numération formule sanguine'),
@@ -66,7 +68,7 @@ class Periodic_Consultation(models.Model):
         ('INAPTE: au poste mais apte a un autre poste','INAPTE: au poste mais apte a un autre poste'),
     )
 
-    matricule = models.CharField(unique=True, max_length=50)
+    matricule = models.CharField(max_length=50)
     nom_prenoms = models.CharField(max_length=200)
     societe = models.CharField(max_length=50, choices=Travailleurs.choix, blank=True)
     atelier = models.CharField(max_length=100, choices=Travailleurs.departement, blank=True)
@@ -81,6 +83,8 @@ class Periodic_Consultation(models.Model):
     break_day = models.PositiveBigIntegerField(blank=True, null=True)
     evacuation = models.BooleanField(default=False)
     observations = models.TextField(blank=True)
+    prescription = models.TextField(max_length=200, blank=True, default="")
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
 
     class Meta:
@@ -110,10 +114,17 @@ class Periodic_Consultation(models.Model):
     def search_by_matricule(cls, matricule):
         return cls.objects.filter(matricule=matricule) 
    
-    def save(self, *args, **kwargs):
-        if not self.break_day:
-            self.break_day = 0
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     request = kwargs.pop('request', None)
+    #     self.user = request.user if request else None 
+    #     if not self.break_day:
+    #         self.break_day = 0
+    #     return super().save(*args, **kwargs)
+    
+    # def save(self, *args, **kwargs):
+    #     request = kwargs.pop('request', None)  # Récupère l'objet request s'il existe
+    #     self.user = request.user if request else None  # Assigne l'utilisateur connecté ou None
+    #     super().save(*args, **kwargs)
 
 class Day_Consultation(models.Model):
     pathologies = (
@@ -153,13 +164,13 @@ class Day_Consultation(models.Model):
     motifs = (
         ('Accidents','Accidents'),
         ('Consultation generale','Consultation générale'),
-        ("Visites d'embauche","Visites d'embauche"),
-        ('Visites de reprise de travail apres maladie','Visites de reprise de travail après maladie'),
-        ('Visites de reprise de travail apres maternite','Visites de reprise de travail après maternité'),
-        ('Visites de reprise de travail apres conge annuel','Visites de reprise de travail après congé annuel'),
-        ('Visites de reprise de travail apres accident du travail','Visites de reprise de travail après accident du travail'),
-        ('Visites de reprise de travail apres maladie professionnelle','Visites de reprise de travail après maladie professionnelle'),
-        ('Visites occasionnelle','Visites occasionnelle'),
+        ("Visite d'embauche","Visites d'embauche"),
+        ('Visite de reprise de travail apres maladie','Visite de reprise de travail après maladie'),
+        ('Visite de reprise de travail apres maternite','Visite de reprise de travail après maternité'),
+        ('Visite de reprise de travail apres conge annuel','Visite de reprise de travail après congé annuel'),
+        ('Visite de reprise de travail apres accident du travail','Visite de reprise de travail après accident du travail'),
+        ('Visite de reprise de travail apres maladie professionnelle','Visite de reprise de travail après maladie professionnelle'),
+        ('Visite occasionnelle','Visite occasionnelle'),
     )
 
     accidents = (
@@ -190,7 +201,7 @@ class Day_Consultation(models.Model):
         ('INAPTE: au poste mais apte a un autre poste','INAPTE: au poste mais apte a un autre poste'),
     )
 
-    matricule = models.CharField(unique=True, max_length=50)
+    matricule = models.CharField(max_length=50)
     nom_prenoms = models.CharField(max_length=200)
     societe = models.CharField(max_length=50, choices=Travailleurs.choix, blank=True)
     atelier = models.CharField(max_length=100, choices=Travailleurs.departement, blank=True)
@@ -208,7 +219,8 @@ class Day_Consultation(models.Model):
     break_day = models.PositiveBigIntegerField(blank=True, null=True)
     evacuation = models.BooleanField(default=False)
     observations = models.TextField(blank=True)
-
+    prescription = models.TextField(max_length=200, blank=True, default="")
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         ordering = ['consultation_date']
@@ -238,6 +250,8 @@ class Day_Consultation(models.Model):
         return cls.objects.filter(matricule=matricule) 
     
     def save(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
+        self.user = request.user if request else None 
         if not self.break_day:
             self.break_day = 0
         return super().save(*args, **kwargs)

@@ -13,13 +13,13 @@ from .models import User
 class Connexion(LoginView):
     template_name = 'log/login.html'
     form_class = ConnexionForm
-    success_url = reverse_lazy('stocks:list_medocs')#Redirection par defaut après authentification
+    success_url = reverse_lazy('index')#Redirection par defaut après authentification
 
     # Redirection personnalisé après authentification pour les users appartenant au groupe Users 
     def get_success_url(self):
         user = self.request.user
         if user.groups.filter(name='Users').exists():
-            return reverse_lazy('consultation:list_consultation_jour')
+            return reverse_lazy('index')
         return self.success_url
 
   
@@ -30,7 +30,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     template_name = 'log/update_user.html'
     form_class = ChangeForm
-    success_url = reverse_lazy('stocks:list_medocs')
+    success_url = reverse_lazy('index')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -40,7 +40,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         user = self.request.user
         if user.groups.filter(name='Users').exists():
-            return reverse_lazy('consultation:list_consultation_jour')
+            return reverse_lazy('index')
         return self.success_url
     
 
@@ -59,3 +59,7 @@ class SuccessView(LoginRequiredMixin, PasswordChangeDoneView):
     def get(self, request, *args, **kwargs):
         message = 'Votre mot de passe a été modifié avec succès.'
         return JsonResponse({'message': message})  
+
+
+def index(request):
+    return render(request, 'base.html')

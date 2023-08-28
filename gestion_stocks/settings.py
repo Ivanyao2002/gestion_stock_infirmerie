@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'gestion_stocks.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'gestion_stocks/templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,7 +134,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # ]
 
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'stocks:list_medocs'#Redirection par defaut après authentification/N'est plus necessaire si on utilise succuess_url dans l'heritage du loginView
+LOGIN_REDIRECT_URL = 'index'#Redirection par defaut après authentification/N'est plus necessaire si on utilise succuess_url dans l'heritage du loginView
 LOGOUT_REDIRECT_URL = 'connexion' 
 LOGIN_URL = 'connexion'
 

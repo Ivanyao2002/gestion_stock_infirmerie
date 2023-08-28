@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomeMedocView,CreateMedocView, UpdateMedocView, DeleteMedocView,TransactionView, HomeTransactionView, achat, vente,RechercheView, exporter_liste_medicaments, HomeFournView, HomeWorkView, CreateWorkerView, CreateFournView, export_transactions, expoter, export_etat, statistiques_details, statistiques_global, DeleteFournisseur, DeleteWorker
+from .views import HomeMedocView,CreateMedocView, UpdateMedocView,TransactionView, HomeTransactionView, achat, vente,RechercheView, exporter_liste_medicaments, HomeFournView, HomeWorkView, CreateWorkerView, CreateFournView, export_transactions, expoter, export_etat, statistiques_details, statistiques_global
 
 app_name = 'stocks'
 
@@ -7,7 +7,6 @@ urlpatterns = [
     path('medicines_list/', HomeMedocView.as_view(), name='list_medocs'),
     path('register_a_new_medicine/', CreateMedocView.as_view(), name='create_medocs'),
     path('update_medicine_<str:slug>/', UpdateMedocView.as_view(), name='update_medocs'),
-    path('delete_medicine_<str:slug>/', DeleteMedocView.as_view(), name='delete_medocs'),
     path('transaction/make_a_transaction/add/', RechercheView.as_view(), name='create_transaction'),
     path('transaction/transactions_list/', HomeTransactionView.as_view(), name='list_transaction'),
     path('transaction/make_a_transaction/remove/', TransactionView.as_view(), name='retrait_transaction'),
@@ -23,6 +22,5 @@ urlpatterns = [
     path('transactions/export_etat_to_excel/', export_etat, name='exporter_etat'),
     path('global_statistics/', statistiques_details, name='statistiques_detail' ),
     path('statistics/', statistiques_global, name='statistiques_global' ),
-    path('workers/delete_worker_<int:pk>/', DeleteWorker.as_view(), name='delete_worker'),
-    path('suppliers/delete_supplier_<int:pk>/', DeleteFournisseur.as_view(), name='delete_fournisseur'),
+
 ]

@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" rel="stylesheet">
     <!--  CSS Files  -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
@@ -25,20 +28,29 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    {% block style %}{% endblock  %}
+    {% block style %}
+    <style>
+      .index{
+        
+        background-color: red;
+        text-align: center;
+      }
+    </style>
+    {% endblock  %}
   </head>
 
   {% if user.is_authenticated %}
   <body>
     <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow" style="background-color: #2C4178;"> 
       {% if perms.stocks %}
-      <a class="navbar-brand col-md-4 col-lg-2 col-xl-2 d-flex align-items-center" href="{% url 'stocks:list_medocs' %}">
+      <a class="navbar-brand col-md-4 col-lg-2 col-xl-2 d-flex align-items-center" href="{% url 'index' %}">
         <img src="{% static 'img/carena_logo.jpg' %}" alt="image" class="img-fluid rounded float-start ms-2" style="width: 95px; height: 40px;">
         <h5 class="text-center flex-grow-1 h6 mt-2">Centre Médical</h5>
       </a>
       {% else %}
-      <a class="navbar-brand col-md-4 col-lg-2 col-xl-2 d-flex align-items-center" href="{% url 'consultation:list_consultation_jour' %}">
+      <a class="navbar-brand col-md-4 col-lg-2 col-xl-2 d-flex align-items-center" href="{% url 'index' %}">
         <img src="{% static 'img/carena_logo.jpg' %}" alt="image" class="img-fluid rounded float-start ms-2" style="width: 95px; height: 40px;">
         <h5 class="text-center flex-grow-1 h6 mt-2">Centre Médical</h5>
       </a>
@@ -48,7 +60,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <span class="text-light text-start bi bi-person-circle m-2" style="font-size:17px;"> <i class="" ></i>{{user.username|upper}}</span>
+      <span class="text-light text-start bi bi-person-circle me-2" style="font-size:17px;">{{user.username|upper}}</span>
       <div class="navbar-nav d-flex flex-row">
         <div class="nav-item ">
           <a class="nav-link px-3" href="{% url 'deconnexion' %}" style="font-size:15px;"><i class="bi bi-arrow-right-circle me-2" style="font-size:17px;"></i>Déconnexion</a>
@@ -72,9 +84,9 @@
                     </button>
                     <div class="collapse show" id="home-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1" style="font-size: 13px;">
-                        <li><a href="{% url 'consultation:consultation_jour' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Consultation Jounalière</a></li>
+                        <li><a href="{% url 'consultation:consultation_jour' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Consultation Journalière</a></li>
                         <li><a href="{% url 'consultation:consultation_vma' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Consultation Périodique</a></li>
-                        <li><a href="{% url 'consultation:list_consultation_jour' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded" style="font-size: 11px;">Toutes les Consultations Jounalières</a></li>
+                        <li><a href="{% url 'consultation:list_consultation_jour' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded" style="font-size: 11px;">Toutes les Consultations Journalières</a></li>
                         <li><a href="{% url 'consultation:list_consultation_vma' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded" style="font-size: 11px;">Toutes les Consultations Périodiques</a></li>
                       </ul>
                     </div>
@@ -143,6 +155,12 @@
           </nav>
   
           {% block body %}
+          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-5 mb-5">
+            <div class="container mt-5 h-100 mb-5 text-center">
+              <h2 class="display-1" style="font-family: 'MonteCarlo', cursive;">Centre Médico-Social</h2>
+              <img src="{% static 'img/carena_logo.jpg' %}" alt="logo">
+            </div>
+          </main>
           {% endblock %}
         </div>
     </div>

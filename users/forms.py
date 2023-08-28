@@ -38,6 +38,8 @@ class ChangeForm(UserChangeForm):
             'style':"color: black;",
             'id':"email",
             'placeholder':"Email",
+            'name':"email",
+            'oninput':"validateEmail()", 
         })
     class Meta:
         model = User

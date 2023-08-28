@@ -71,6 +71,7 @@
             <th scope="col">TYPE DE VISITE</th>
             <th scope="col">APTITUDE</th>
             <th scope="col">PATHOLOGIE</th>
+            <th scope="col">CONSULTANT</th>
           </tr>
         </thead>
         <tbody>
@@ -95,6 +96,7 @@
             <td>{{ vm.reasons }}</td>
             <td>{{ vm.aptitude }}</td>
             <td>{{ vm.pathology }}</td>
+            <td>{{ day.user }}</td>
           </tr>
 
           {% empty %}
